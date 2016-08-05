@@ -1,0 +1,23 @@
+{
+  "name": "checkpoint-3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine-node tests/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andela-jwarugu/Document-Management-System.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andela-jwarugu/Document-Management-System/issues"
+  },
+  "homepage": "https://github.com/andela-jwarugu/Document-Management-System#readme",
+  "dependencies": {
+    "jasmine-node": "^1.14.5",
+    "mongoose": "^4.5.8"
+  }
+}
