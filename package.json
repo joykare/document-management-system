@@ -25,6 +25,7 @@
     "mongoose": "^4.5.8"
   },
   "devDependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "eslint": "^3.2.2",
     "supertest": "^2.0.0"
   }
