@@ -10,6 +10,10 @@ app.use(bodyParser.json());
 var port =process.env.PORT || 8080;
 var router = express.Router();
 
+router.post('/users/login', User.login);
+
+router.use(User.authenticate);
+
 router.route('/users')
   .post(User.create)
   .get(User.get);

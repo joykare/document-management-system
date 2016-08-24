@@ -1,9 +1,78 @@
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
+var jwt = require('jsonwebtoken');
+var superSecret = 'whatwhatwhatwhatwhat';
 
 mongoose.connect('mongodb://localhost/cp3');
 
 module.exports = {
+  authenticate: function(req, res, next){
+    // check header/url/post params for tokens
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+      // verifies secret
+      jwt.verify(token, superSecret, function(err, decoded){
+        if (err) {
+          return res.status(403).send({
+            success: false,
+            message: 'Failed to authenticate token'
+          });
+        } else {
+          // if everything is good save to request for use in other routes
+          req.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+      // if there is no token
+      return res.status(403).send({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+  },
+  login: function(req, res){
+    User.findOne({
+      email: req.body.email
+    }, function(err, user){
+      if (err)
+        throw err;
+      // no user with the email
+      if (!user){
+        res.json({
+          success: false,
+          message: 'Authentication failed. User not found'
+        });
+      }
+      else if (user){
+        // check if password matches
+        var validPassword = user.comparePassword(req.body.password);
+        if (!validPassword){
+          res.json ({
+            success: false,
+            message: 'Wrong password'
+          });
+        } else {
+          // if password is valid create token
+          var token = jwt.sign ({
+            email: user.email,
+            id: user.id
+          }, superSecret, {
+            expiresIn: 1440
+          });
+
+          // return a message
+          res.json ({
+            success: true,
+            message: 'You are logged in successfully. Token valid for 24 hrs!!',
+            token: token
+          });
+        }
+      }
+    });
+  },
   create: function(req, res){
     var user = new User();
     user.id = req.body.id;

@@ -27,6 +27,7 @@
   "devDependencies": {
     "bcrypt-nodejs": "0.0.3",
     "eslint": "^3.2.2",
+    "jsonwebtoken": "^7.1.9",
     "supertest": "^2.0.0"
   }
 }
