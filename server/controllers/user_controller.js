@@ -36,7 +36,7 @@ module.exports = {
   login: function(req, res){
     User.findOne({
       email: req.body.email
-    }, function(err, user){
+    }).select('email password').exec(function(err, user){
       if (err)
         throw err;
       // no user with the email
@@ -102,11 +102,16 @@ module.exports = {
         res.send(err);
       }
       else{
-        user.id = req.body.id;
-        user.username = req.body.username;
-        user.name = {first: req.body.first, last: req.body.last};
-        user.email = req.body.email;
-        user.password= req.body.password;
+        if (req.body.id)
+          user.id = req.body.id;
+        if (req.body.username)
+          user.username = req.body.username;
+        if (req.body.first || req.body.last)
+          user.name = {first: req.body.first, last: req.body.last};
+        if (req.body.email)
+          user.email = req.body.email;
+        if (req.body.password)
+          user.password= req.body.password;
 
         user.save(function(err){
           if (err){
