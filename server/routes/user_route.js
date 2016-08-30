@@ -17,7 +17,7 @@ var router = express.Router();
 
 router.post('/users/login', User.login);
 
-// router.use(User.authenticate);
+router.use(User.authenticate);
 
 router.route('/users')
   .post(User.create)
