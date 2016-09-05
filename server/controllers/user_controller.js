@@ -1,78 +1,76 @@
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
 var jwt = require('jsonwebtoken');
-var superSecret = 'whatwhatwhatwhatwhat';
-
-mongoose.connect('mongodb://localhost/cp3');
+var config = require('../../config/config.js');
 
 module.exports = {
   authenticate: function(req, res, next){
-    // check header/url/post params for tokens
+
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-    // decode token
-    if (token) {
-      // verifies secret
-      jwt.verify(token, superSecret, function(err, decoded){
-        if (err) {
-          return res.status(403).send({
-            success: false,
-            message: 'Failed to authenticate token'
-          });
-        } else {
-          // if everything is good save to request for use in other routes
+    if (token){
+      jwt.verify(token, config.secret, function(err, decoded){
+        if (err){
+          res.json({success: false, message: 'Failed to authenticate token'});
+        }else {
           req.decoded = decoded;
+          console.log(decoded);
           next();
         }
       });
-    } else {
-      // if there is no token
-      return res.status(403).send({
+    } else{
+      res.status(403).send({
         success: false,
         message: 'No token provided'
       });
     }
   },
+
   login: function(req, res){
     User.findOne({
       email: req.body.email
-    }).select('email password').exec(function(err, user){
-      if (err)
-        throw err;
-      // no user with the email
-      if (!user){
-        res.json({
-          success: false,
-          message: 'Authentication failed. User not found'
-        });
+    }).select('email password').exec(function (err, user){
+      if (err){
+        res.json({success: false, message: 'Failed to log in, try again'});
       }
-      else if (user){
-        // check if password matches
+      if (!user) {
+        res.json({success: false, message: 'Email does not exist'});
+      }
+      else if (user) {
+
         var validPassword = user.comparePassword(req.body.password);
-        if (!validPassword){
-          res.json ({
+        if(!validPassword) {
+          res.json({
             success: false,
-            message: 'Wrong password'
+            message: 'Wrong message'
           });
         } else {
-          // if password is valid create token
-          var token = jwt.sign ({
-            email: user.email,
-            id: user.id
-          }, superSecret, {
-            expiresIn: 1440
+          var token = jwt.sign({
+            _id: user._id,
+            email: user.email
+          }, config.secret, {
+            expiresIn: '24h'
           });
 
-          // return a message
-          res.json ({
+          res.json({
             success: true,
-            message: 'You are logged in successfully. Token valid for 24 hrs!!',
+            message: 'Enjoy your token',
             token: token
           });
         }
       }
-    });
+    })
   },
+
+  // logout: function(req, res){
+  //   if(req.body.token || req.query.token || req.headers['x-access-token'])
+  //     token = null;
+  //     res.json({
+  //       message: 'You are now logged out',
+  //       token: token
+  //     });
+  //   res.json({message: 'You aren\'t logged in'});
+  // },
   create: function(req, res){
     var user = new User();
     user.id = req.body.id;
@@ -98,6 +96,7 @@ module.exports = {
   },
   update: function(req, res){
     User.findById(req.params.user_id, function(err, user){
+      console.log('ID:', req.decoded);
       if (err){
         res.send(err);
       }

@@ -1,35 +1,20 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
 var User = require('../controllers/user_controller.js');
 
+module.exports = function(router){
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+  router.post('/users/login', User.login);
 
-// var port =process.env.PORT || 8080;
+  router.use(User.authenticate);
 
-app.get('/', function(req, res){
-  res.json({message: 'Welcome to the home page!!'});
-});
+  // router.post('/users/logout', User.logout);
 
-var router = express.Router();
+  router.route('/users')
+    .post(User.create)
+    .get(User.get);
 
-router.post('/users/login', User.login);
+  router.route('/users/:user_id')
+    .put(User.update)
+    .get(User.find)
+    .delete(User.remove);
 
-router.use(User.authenticate);
-
-router.route('/users')
-  .post(User.create)
-  .get(User.get);
-
-router.route('/users/:user_id')
-  .put(User.update)
-  .get(User.find)
-  .delete(User.remove);
-
-app.use('/api', router);
-
-// app.listen(port);
-
-module.exports = app;
+}

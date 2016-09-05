@@ -23,6 +23,12 @@ var userSchema = new Schema ({
   },
   email: {
     type: String,
+    validate: {
+      validator: function(email){
+        return /\w+@\w+\.\w+/.test(email);
+      },
+      message: '{VALUE} is not a valid email address!'
+    },
     required: true,
     index: {
       unique: true

@@ -6,8 +6,8 @@ var documentSchema = new Schema ({
   ownerId: Number,
   title: String,
   content: String,
-  createdAt: String,
-  modifiedAt: String
+  createdAt: Date,
+  modifiedAt: Date
 
 });
 
