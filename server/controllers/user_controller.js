@@ -5,7 +5,6 @@ module.exports = {
 
   create: function(req, res){
     var user = new User();
-    user.id = req.body.id;
     user.username = req.body.username;
     user.name = {first: req.body.first, last: req.body.last};
     user.email = req.body.email;
@@ -13,28 +12,25 @@ module.exports = {
 
     user.save(function (err){
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'Error occured during save.'});
       }
-      res.json({message: 'New user created'});
+      res.status(200).send({message: 'New user created'});
     });
   },
   get: function(req, res){
     User.find(function(err, users){
       if(err){
-        res.send(err);
+        res.status(400).send({message: 'Error occured while accessing the user.'});
       }
-      res.json(users);
+      res.status(200).json(users);
     });
   },
   update: function(req, res){
     User.findById(req.params.user_id, function(err, user){
-      console.log('ID:', req.decoded);
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'Error occured while accessing the user.'});
       }
       else{
-        if (req.body.id)
-          user.id = req.body.id;
         if (req.body.username)
           user.username = req.body.username;
         if (req.body.first || req.body.last)
@@ -46,9 +42,9 @@ module.exports = {
 
         user.save(function(err){
           if (err){
-            res.send(err);
+            res.status(400).send({message: 'Error occured while saving the user.'});
           }
-          res.json({message: 'User has been updated'});
+          res.status(200).send({message: 'User has been updated'});
         });
       }
     });
@@ -56,9 +52,9 @@ module.exports = {
   find: function(req, res){
     User.findById(req.params.user_id, function(err, user){
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'Error occured while accessing the user.'});
       }
-      res.json(user);
+      res.status(200).json(user);
 
     });
   },
@@ -66,9 +62,9 @@ module.exports = {
     User.remove(
       {_id: req.params.user_id}, function(err){
         if (err){
-          res.send(err);
+          res.status(400).send({message: 'Error occured while accessing the user.'});
         }
-        res.json({message: 'User has been deleted'});
+        res.status(200).send({message: 'User has been deleted'});
       });
   }
 };

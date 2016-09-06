@@ -1,58 +1,54 @@
 var Document = require('../models/document.js');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/cp3');
 
 module.exports = {
   create: function(req, res){
     var document = new Document();
-    document.id = req.body.id;
-    document.ownerId = req.body.ownerId;
+
+    document.ownerId = req.decoded._id;
     document.title = req.body.title;
     document.content = req.body.content;
-    document.createdAt = req.body.createdAt;
-    document.modifiedAt = req.body.modifiedAt;
 
     document.save(function(err){
       if(err){
-        res.send(err);
+        res.status(400).send({message: 'An error occured when saving your document'});
       }
-      res.json({message: 'New document created'});
+      res.status(200).send({message: 'New document created'});
     });
   },
   get: function(req, res){
     Document.find(function(err, documents){
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'An error occured when finding your document'});
       }
-      res.json(documents);
+      res.status(200).json(documents);
     });
   },
   find: function(req, res){
     Document.findById(req.params.document_id, function(err, document){
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'An error occured when finding your document'});
       }
-      res.json(document);
+      res.status(200).json(document);
     });
   },
   update: function(req, res){
     Document.findById(req.params.document_id, function(err, document){
       if (err){
-        res.send(err);
+        res.status(400).send({message: 'An error occured when finding your document'});
       }
       else {
-        document.id = req.body.id;
-        document.ownerId = req.body.ownerId;
-        document.title = req.body.title;
-        document.content = req.body.content;
-        document.createdAt = req.body.createdAt;
-        document.modifiedAt = req.body.modifiedAt;
+        if(document.ownerId)
+          document.ownerId = req.decoded._id;
+        if(document.title)
+          document.title = req.body.title;
+        if(document.content)
+          document.content = req.body.content;
 
         document.save(function(err){
           if (err){
-            res.send(err);
+            res.status(400).send({message: 'An error occured when saving your document'});
           }
-          res.json({message: 'Document has been updated'});
+          res.status(200).send({message: 'Document has been updated'});
         });
       }
     });
@@ -61,9 +57,9 @@ module.exports = {
     Document.remove(
       {_id: req.params.document_id}, function(err){
         if (err){
-          res.send(err);
+          res.status(400).send({message: 'An error occured when deleting your document'});
         }
-        res.json({message: 'Document has been deleted'});
+        res.status(200).send({message: 'Document has been deleted'});
       });
   }
 };
