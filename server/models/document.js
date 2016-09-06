@@ -2,14 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var documentSchema = new Schema ({
-  id: Number,
-  ownerId: Number,
+  ownerId: {
+    ref: 'User',
+    type: Schema.Types.ObjectId
+  },
   title: String,
   content: String,
-  createdAt: Date,
-  modifiedAt: Date
 
-});
+},{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'}});
 
 var Document = mongoose.model('Document', documentSchema);
 
