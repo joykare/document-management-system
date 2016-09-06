@@ -10,14 +10,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use('/api', routes(router));
 
-mongoose.createConnection(config.dev_database, function(err){
+mongoose.connect(config.test_database, function(err){
   if (err){
     console.log('Database connection error: ', err);
   }else {
-    console.log('Dev database connected successfully');
+    console.log('Database connected successfully');
   }
 });
 
-app.listen(config.port);
+app.listen(config.port,  function(err){
+  if (err){
+    console.log('Port not reached: ', err);
+  } else {
+    console.log('Magic port right here');
+  }
+});
 
 module.exports = app;

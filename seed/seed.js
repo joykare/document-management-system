@@ -1,7 +1,6 @@
 module.exports = {
   users: [  {
       username: 'jwarugu',
-      id: 1,
       name: {
         first: 'joy',
         last: 'warugu'
@@ -11,7 +10,6 @@ module.exports = {
     },
     {
       username: 'skieha',
-      id: 2,
       name: {
         first: 'sylvia',
         last: 'kieha'
@@ -21,7 +19,6 @@ module.exports = {
     },
     {
       username: 'emabishi',
-      id: 3,
       name: {
         first: 'elizabeth',
         last: 'mabishi'
@@ -31,7 +28,6 @@ module.exports = {
     },
     {
       username: 'tbaraza',
-      id: 4,
       name: {
         first: 'tonida',
         last: 'baraza'

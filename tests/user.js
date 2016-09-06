@@ -16,7 +16,7 @@ describe('user test suite', function() {
         token = res.body.token;
         done();
       })
-  })
+  });
 
   describe('/users CRUD operations', function() {
     it('creates a user in the db', function(done){
@@ -27,9 +27,8 @@ describe('user test suite', function() {
           username: 'user',
           first: 'first',
           last: 'last',
-          password: 'user',
           email: 'user@gmail.com',
-          id: 1
+          password: 'user'
         })
         .expect({message: 'New user created'}, done);
     });
