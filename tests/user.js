@@ -33,6 +33,20 @@ describe('user test suite', function() {
         .expect(200)
         .expect({message: 'New user created'}, done);
     });
+    it('asserts that no duplicates can be created', function(done){
+      request
+        .post('/api/users')
+        .set('x-access-token', token)
+        .send({
+          username: 'user',
+          first: 'first',
+          last: 'last',
+          email: 'user@gmail.com',
+          password: 'user'
+        })
+        .expect(409)
+        .expect({message: 'Duplicate entry'}, done);
+    });
   })
 })
 

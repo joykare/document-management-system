@@ -13,9 +13,14 @@ module.exports = {
 
     user.save(function (err){
       if (err){
-        res.status(400).send({message: 'Error occured during save.'});
+        if(err.code === 11000){
+          res.status(409).send({message: 'Duplicate entry'})
+        } else {
+          res.status(400).send({message: 'Error occured while saving the user.'});
+        }
+      } else {
+        res.status(200).send({message: 'New user created'});
       }
-      res.status(200).send({message: 'New user created'});
     });
   },
 
@@ -45,9 +50,14 @@ module.exports = {
 
         user.save(function(err){
           if (err){
-            res.status(400).send({message: 'Error occured while saving the user.'});
+            if(err.code = 11000){
+              res.status(409).send({message: 'Duplicate entry'})
+            } else {
+              res.status(400).send({message: 'Error occured while saving the user.'});
+            }
+          } else {
+            res.status(200).send({message: 'User has been updated'});
           }
-          res.status(200).send({message: 'User has been updated'});
         });
       }
     });
@@ -72,7 +82,7 @@ module.exports = {
         res.status(200).send({message: 'User has been deleted'});
       });
   },
-  
+
   findUserDocuments: function(req, res){
     User.findById(req.params.user_id, function(err, user){
       if (err || !user){
