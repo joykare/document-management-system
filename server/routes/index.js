@@ -1,8 +1,9 @@
 var userRoute = require('./user_route'),
-  User = require('../models/user.js'),
+  User = require('../models/user'),
   documentRoute = require('./document_route'),
+  roleRoute = require('./role_route');
   jwt = require('jsonwebtoken'),
-  config = require('../../config/config.js');
+  config = require('../../config/config');
 
 module.exports = function(router){
   router.get('/', function(req, res) {
@@ -62,6 +63,7 @@ module.exports = function(router){
 
   userRoute(router);
   documentRoute(router);
+  roleRoute(router);
 
   return router;
 }

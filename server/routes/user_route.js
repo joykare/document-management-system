@@ -1,4 +1,4 @@
-var User = require('../controllers/user_controller.js');
+var User = require('../controllers/user_controller');
 
 module.exports = function(router){
 

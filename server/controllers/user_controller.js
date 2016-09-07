@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
 var Document = require('../models/document.js');
+var Role = require('../models/role.js');
 
 module.exports = {
 
@@ -11,15 +12,23 @@ module.exports = {
     user.email = req.body.email;
     user.password= req.body.password;
 
-    user.save(function (err){
-      if (err){
-        if(err.code === 11000){
-          res.status(409).send({message: 'Duplicate entry'})
-        } else {
-          res.status(400).send({message: 'Error occured while saving the user'});
-        }
+    Role.findOne({title: req.body.role}, function(err, role){
+      if(err){
+        res.send({message: 'No such role exists'});
       } else {
-        res.status(200).send({message: 'New user created'});
+        console.log(role._id);
+        user.role = role._id;
+        User.create(user, function (err){
+          if (err){
+            if(err.code === 11000){
+              res.status(409).send({message: 'Duplicate entry'})
+            } else {
+              res.status(400).send({message: 'Error occured while saving the user'});
+            }
+          } else {
+            res.status(200).send({message: 'New user created'});
+          }
+        })
       }
     });
   },

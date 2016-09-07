@@ -52,7 +52,7 @@ describe('user test suite', function() {
 
       expect(username.options.index.unique).to.equal(true);
       expect(email.options.index.unique).to.equal(true);
-      
+
       request
         .post('/api/users')
         .set('x-access-token', token)

@@ -37,6 +37,10 @@ var userSchema = new Schema ({
     type: String,
     required: true,
     select: false
+  },
+  role: {
+    type: Schema.Types.ObjectId,
+    ref: 'Role'
   }
 
 });

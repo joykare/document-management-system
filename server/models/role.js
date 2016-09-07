@@ -2,21 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var roleSchema = new Schema ({
-  id: Number,
-  title: String”
+  title: {
+    type: String,
+    required: true,
+    enum: ['admin', 'user']
+  }
 });
 
-var Role = mongoose.model('Role', userSchema);
-
-var role1 = new Role({
-  id: 1,
-  title: 'I need to do X'
-});
-
-role1.save(function(err, role1) {
-  if (err) return console.error(err);
-  console.dir(role1);
-});
-
+var Role = mongoose.model('Role', roleSchema);
 
 module.exports = Role;
