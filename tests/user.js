@@ -1,5 +1,7 @@
 var app = require('../index');
 var request = require('supertest')(app);
+var expect = require('chai').expect;
+var User = require('../server/models/user.js');
 
 describe('user test suite', function() {
   var token;
@@ -19,6 +21,17 @@ describe('user test suite', function() {
   });
 
   describe('/users CRUD operations', function() {
+    it('route that returns all users', function(done){
+      request
+        .get('/api/users')
+        .set('x-access-token', token)
+        .expect(200)
+        .end(function (err, res){
+          if (err) return done(err);
+          expect(res.body).to.have.length(4);
+          done();
+        })
+    });
     it('creates a user in the db', function(done){
       request
         .post('/api/users')
@@ -34,6 +47,12 @@ describe('user test suite', function() {
         .expect({message: 'New user created'}, done);
     });
     it('asserts that no duplicates can be created', function(done){
+      var username = User.schema.paths.username;
+      var email = User.schema.paths.email;
+
+      expect(username.options.index.unique).to.equal(true);
+      expect(email.options.index.unique).to.equal(true);
+      
       request
         .post('/api/users')
         .set('x-access-token', token)
@@ -47,6 +66,29 @@ describe('user test suite', function() {
         .expect(409)
         .expect({message: 'Duplicate entry'}, done);
     });
+    it('asserts that last and first names are required', function(done){
+      request
+        .post('/api/users')
+        .set('x-access-token', token)
+        .send({
+          username: 'test',
+          email: 'test@gmail.com',
+          password: 'test'
+        })
+        .expect(400)
+        .expect({message: 'Error occured while saving the user'}, done);
+    });
+    // it('have role defined', function(done){
+    //   request
+    //     .get('/api/users')
+    //     .set('x-access-token', token)
+    //     .expect(200)
+    //     .end(function (err, res){
+    //       if (err) return done(err);
+    //       expect(res.body).to.have.length(5);
+    //       done();
+    //     })
+    // });
   })
 })
 

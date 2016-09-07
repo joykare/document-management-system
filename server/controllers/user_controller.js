@@ -16,7 +16,7 @@ module.exports = {
         if(err.code === 11000){
           res.status(409).send({message: 'Duplicate entry'})
         } else {
-          res.status(400).send({message: 'Error occured while saving the user.'});
+          res.status(400).send({message: 'Error occured while saving the user'});
         }
       } else {
         res.status(200).send({message: 'New user created'});
@@ -27,7 +27,7 @@ module.exports = {
   get: function(req, res){
     User.find(function(err, users){
       if(err){
-        res.status(400).send({message: 'Error occured while accessing the user.'});
+        res.status(400).send({message: 'Error occured while accessing the user'});
       }
       res.status(200).json(users);
     });

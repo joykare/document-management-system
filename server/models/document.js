@@ -6,7 +6,11 @@ var documentSchema = new Schema ({
     ref: 'User',
     type: Schema.Types.ObjectId
   },
-  title: String,
+  title: {
+    type: String,
+    unique: true,
+    required: true
+  },
   content: String,
 
 },{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'}});
