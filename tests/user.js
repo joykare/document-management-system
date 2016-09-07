@@ -30,6 +30,7 @@ describe('user test suite', function() {
           email: 'user@gmail.com',
           password: 'user'
         })
+        .expect(200)
         .expect({message: 'New user created'}, done);
     });
   })

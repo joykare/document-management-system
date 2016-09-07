@@ -11,4 +11,5 @@ module.exports = function(router){
     .get(User.find)
     .delete(User.remove);
 
+  router.get('/users/:user_id/documents', User.findUserDocuments);
 }

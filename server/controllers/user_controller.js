@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../models/user.js');
+var Document = require('../models/document.js');
 
 module.exports = {
 
@@ -17,6 +18,7 @@ module.exports = {
       res.status(200).send({message: 'New user created'});
     });
   },
+
   get: function(req, res){
     User.find(function(err, users){
       if(err){
@@ -25,6 +27,7 @@ module.exports = {
       res.status(200).json(users);
     });
   },
+
   update: function(req, res){
     User.findById(req.params.user_id, function(err, user){
       if (err){
@@ -49,6 +52,7 @@ module.exports = {
       }
     });
   },
+
   find: function(req, res){
     User.findById(req.params.user_id, function(err, user){
       if (err){
@@ -58,6 +62,7 @@ module.exports = {
 
     });
   },
+
   remove: function(req, res){
     User.remove(
       {_id: req.params.user_id}, function(err){
@@ -66,5 +71,20 @@ module.exports = {
         }
         res.status(200).send({message: 'User has been deleted'});
       });
+  },
+  
+  findUserDocuments: function(req, res){
+    User.findById(req.params.user_id, function(err, user){
+      if (err || !user){
+        res.status(400).send('User not found');
+      }
+
+      Document.find({ownerId: user._id}).exec(function (err, documents){
+        if (err){
+          res.status(400).send({message: 'Error occured while getting documents'});
+        }
+        res.json(documents);
+      })
+    })
   }
 };
