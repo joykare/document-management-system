@@ -40,7 +40,8 @@ var userSchema = new Schema ({
   },
   role: {
     type: Schema.Types.ObjectId,
-    ref: 'Role'
+    ref: 'Role',
+    required: true
   }
 
 });

@@ -41,7 +41,8 @@ describe('user test suite', function() {
           first: 'first',
           last: 'last',
           email: 'user@gmail.com',
-          password: 'user'
+          password: 'user',
+          role: 'user'
         })
         .expect(200)
         .expect({message: 'New user created'}, done);
@@ -61,7 +62,8 @@ describe('user test suite', function() {
           first: 'first',
           last: 'last',
           email: 'user@gmail.com',
-          password: 'user'
+          password: 'user',
+          role: 'user'
         })
         .expect(409)
         .expect({message: 'Duplicate entry'}, done);
@@ -73,22 +75,17 @@ describe('user test suite', function() {
         .send({
           username: 'test',
           email: 'test@gmail.com',
-          password: 'test'
+          password: 'test',
+          role: 'user'
         })
         .expect(400)
         .expect({message: 'Error occured while saving the user'}, done);
     });
-    // it('have role defined', function(done){
-    //   request
-    //     .get('/api/users')
-    //     .set('x-access-token', token)
-    //     .expect(200)
-    //     .end(function (err, res){
-    //       if (err) return done(err);
-    //       expect(res.body).to.have.length(5);
-    //       done();
-    //     })
-    // });
+    it('asserts that a new user has a role defined', function(done){
+      var role = User.schema.paths.role;
+      expect(role.options.required).to.equal(true);
+      done();
+    });
   })
 })
 

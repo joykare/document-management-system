@@ -16,9 +16,10 @@ module.exports = {
       if(err){
         res.send({message: 'No such role exists'});
       } else {
+        console.log(role.title);
 
         user.role = role._id;
-        
+
         user.save (function (err){
           if (err){
             if(err.code === 11000){
@@ -57,7 +58,7 @@ module.exports = {
           user.email = req.body.email;
         if (req.body.password)
           user.password= req.body.password;
-
+          
         user.save(function(err){
           if (err){
             if(err.code = 11000){
@@ -66,6 +67,7 @@ module.exports = {
               res.status(400).send({message: 'Error occured while saving the user.'});
             }
           } else {
+
             res.status(200).send({message: 'User has been updated'});
           }
         });

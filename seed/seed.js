@@ -1,3 +1,5 @@
+var mongoose = require('mongoose');
+
 module.exports = {
   users: [  {
       username: 'jwarugu',
@@ -6,7 +8,8 @@ module.exports = {
         last: 'warugu'
       },
       email: 'jwarugu@gmail.com',
-      password: 'jwarugu'
+      password: 'jwarugu',
+      role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
       username: 'skieha',
@@ -15,7 +18,8 @@ module.exports = {
         last: 'kieha'
       },
       email: 'skieha@gmail.com',
-      password: 'skieha'
+      password: 'skieha',
+      role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
       username: 'emabishi',
@@ -24,16 +28,28 @@ module.exports = {
         last: 'mabishi'
       },
       email: 'emabishi@gmail.com',
-      password: 'emabishi'
+      password: 'emabishi',
+      role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
       username: 'tbaraza',
       name: {
         first: 'tonida',
-        last: 'baraza'
+        last: '57d11f35b0a303c1186279us'
       },
       email: 'tbaraza@gmail.com',
-      password: 'tbaraza'
-    }]
+      password: 'tbaraza',
+      role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+    }],
+
+  roles : [{
+    title: 'admin',
+    _id: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
+  }, {
+    title: 'user',
+    _id: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+  }]
+
+
 
   }
