@@ -16,9 +16,10 @@ module.exports = {
       if(err){
         res.send({message: 'No such role exists'});
       } else {
-        console.log(role._id);
+
         user.role = role._id;
-        User.create(user, function (err){
+        
+        user.save (function (err){
           if (err){
             if(err.code === 11000){
               res.status(409).send({message: 'Duplicate entry'})
