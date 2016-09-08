@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "node seed/",
-    "test": "mocha tests/"
+    "test": "istanbul cover _mocha tests/ --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,11 @@
   },
   "devDependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "coveralls": "^2.11.12",
     "eslint": "^3.2.2",
+    "istanbul": "^0.4.5",
     "jsonwebtoken": "^7.1.9",
+    "mocha-lcov-reporter": "^1.2.0",
     "supertest": "^2.0.0"
   }
 }
