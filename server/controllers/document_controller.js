@@ -10,7 +10,11 @@ module.exports = {
 
     document.save(function(err){
       if(err){
-        res.status(400).send({message: 'An error occured when saving your document'});
+        if(err.code === 11000){
+          res.status(409).send({message: 'Duplicate entry'})
+        } else {
+          res.status(400).send({message: 'Error occured while saving the document'});
+        }
       }
       res.status(200).send({message: 'New document created'});
     });
@@ -20,13 +24,22 @@ module.exports = {
       if (err){
         res.status(400).send({message: 'An error occured when finding your document'});
       }
-      res.status(200).json(documents);
+      
+      if (documents.length === 0) {
+        res.status(409).send({message: 'No documents for user'});
+      }
+      else {
+        res.status(200).json(documents);
+      }
     });
   },
   find: function(req, res){
     Document.findById(req.params.document_id, function(err, document){
       if (err){
         res.status(400).send({message: 'An error occured when finding your document'});
+      }
+      if (!document) {
+        res.status(409).send({message: 'Document not found'});
       }
       res.status(200).json(document);
     });

@@ -1,7 +1,7 @@
 var app = require('../index');
 var request = require('supertest')(app);
 var expect = require('chai').expect;
-var User = require('../server/models/user.js');
+var User = require('../server/models/user');
 
 describe('user test suite', function() {
   var token;
