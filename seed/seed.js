@@ -52,7 +52,22 @@ module.exports = {
   }, {
     title: 'user',
     _id: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
-  }]
+  }],
+
+  documents : [{
+    ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
+    title: 'Hey',
+    content: 'Hello World'
+  }, {
+    ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
+    title: 'User',
+    content: 'Next document'
+  }, {
+    ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
+    title: 'Try',
+    content: 'Out of content'
+  }
+]
 
 
 

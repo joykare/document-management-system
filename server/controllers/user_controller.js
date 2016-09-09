@@ -14,10 +14,12 @@ module.exports = {
 
     Role.findOne({title: req.body.role}, function(err, role){
       if(err){
+        res.status(400).send({message: 'Error occured'});
+      }
+      if(!role){
         res.send({message: 'No such role exists'});
-      } else {
-        console.log(role.title);
-
+      }
+      else if (role) {
         user.role = role._id;
 
         user.save (function (err){
@@ -49,6 +51,9 @@ module.exports = {
       if (err){
         res.status(400).send({message: 'Error occured while accessing the user.'});
       }
+      if (!user) {
+        res.status(404).send({message: 'User not found'});
+      }
       else{
         if (req.body.username)
           user.username = req.body.username;
@@ -58,14 +63,10 @@ module.exports = {
           user.email = req.body.email;
         if (req.body.password)
           user.password= req.body.password;
-          
+
         user.save(function(err){
           if (err){
-            if(err.code = 11000){
-              res.status(409).send({message: 'Duplicate entry'})
-            } else {
               res.status(400).send({message: 'Error occured while saving the user.'});
-            }
           } else {
 
             res.status(200).send({message: 'User has been updated'});
@@ -76,11 +77,16 @@ module.exports = {
   },
 
   find: function(req, res){
-    User.findById(req.params.user_id, function(err, user){
+    User.findOne({_id: req.params.user_id}, function(err, user){
+
       if (err){
         res.status(400).send({message: 'Error occured while accessing the user.'});
       }
-      res.status(200).json(user);
+      if (!user) {
+        res.status(404).send({message: 'User not found'});
+      } else {
+        res.status(200).send(user);
+      }
 
     });
   },
@@ -97,16 +103,19 @@ module.exports = {
 
   findUserDocuments: function(req, res){
     User.findById(req.params.user_id, function(err, user){
-      if (err || !user){
-        res.status(400).send('User not found');
+      if (err){
+        res.status(400).send({message: 'Error occured while getting users'});
       }
-
-      Document.find({ownerId: user._id}).exec(function (err, documents){
-        if (err){
-          res.status(400).send({message: 'Error occured while getting documents'});
-        }
-        res.json(documents);
-      })
+      if (!user) {
+        res.status(404).send({message: 'User not found'});
+      } else {
+        Document.find({ownerId: user._id}).exec(function (err, documents){
+          if (err){
+            res.status(400).send({message: 'Error occured while getting documents'});
+          }
+          res.json(documents);
+        })
+      }
     })
   }
 };
