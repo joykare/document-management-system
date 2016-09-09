@@ -14,13 +14,17 @@ mongoose.connection.on('connected', function(err){
   User.create(seed.users, function(err){
     if (err) {
       console.log('error: ', err );
+    }else {
+      console.log('Users added successfully');
     }
     process.exit();
-  })
+  });
+
   Role.create(seed.roles, function(err){
     if (err) {
       console.log('error: ', err );
+    } else {
+      console.log('Roles added successfully');
     }
-    process.exit();
-  })
-})
+  });
+});

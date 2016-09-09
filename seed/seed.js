@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 module.exports = {
   users: [  {
+      _id: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
       username: 'jwarugu',
       name: {
         first: 'joy',
@@ -12,6 +13,7 @@ module.exports = {
       role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
+      _id: mongoose.Types.ObjectId('54d11f35b0a303c1112345db'),
       username: 'skieha',
       name: {
         first: 'sylvia',
@@ -22,6 +24,7 @@ module.exports = {
       role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
+      _id: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
       username: 'emabishi',
       name: {
         first: 'elizabeth',
@@ -32,6 +35,7 @@ module.exports = {
       role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
     },
     {
+      _id: mongoose.Types.ObjectId('57d11f35b0a303c6789079fd'),
       username: 'tbaraza',
       name: {
         first: 'tonida',
