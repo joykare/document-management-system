@@ -5,7 +5,7 @@ var roleSchema = new Schema ({
   title: {
     type: String,
     required: true,
-    enum: ['admin', 'user']
+    enum: ['superadmin', 'admin', 'user']
   }
 });
 

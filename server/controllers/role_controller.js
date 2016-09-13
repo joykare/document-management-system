@@ -13,8 +13,6 @@ module.exports = {
 
   create: function(req, res){
     var possibleRoles = Role.schema.path('title').enumValues;
-    console.log(Role.schema.path('title').enumValues);
-
     var role = new Role();
 
     if (possibleRoles.indexOf(req.body.role) !== -1) {
