@@ -4,10 +4,10 @@ module.exports = function(router) {
 
   router.route('/documents')
     .post(Document.create)
-    .get(Document.get);
+    .get(Document.getAll);
 
   router.route('/documents/:document_id')
-    .get(Document.find)
+    .get(Document.findOne)
     .put(Document.update)
     .delete(Document.remove);
 

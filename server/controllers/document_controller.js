@@ -1,4 +1,4 @@
-var Document = require('../models/document.js');
+var Document = require('../models/document');
 
 module.exports = {
   create: function(req, res){
@@ -7,6 +7,7 @@ module.exports = {
     document.ownerId = req.decoded._id;
     document.title = req.body.title;
     document.content = req.body.content;
+    if(req.body.accessLevel) {document.accessLevel = req.body.accessLevel}
 
     document.save(function(err){
       if(err){
@@ -19,21 +20,30 @@ module.exports = {
       res.status(200).send({message: 'New document created'});
     });
   },
-  get: function(req, res){
-    Document.find(function(err, documents){
-      if (err){
-        res.status(400).send({message: 'An error occured when finding your document'});
-      }
-      
-      if (documents.length === 0) {
-        res.status(409).send({message: 'No documents for user'});
-      }
-      else {
-        res.status(200).json(documents);
-      }
-    });
+  getAll: function(req, res){
+    var limit = req.query.limit || req.headers['limit'];
+    var skip = req.query.skip || req.headers['skip'];
+
+    Document.find({ 
+        $or : [{ownerId: req.decoded._id}, {accessLevel: 'public'}]
+      })
+      .skip(parseInt(skip) || 0)
+      .limit(parseInt(limit) || 10)
+      .sort('createdAt')
+      .exec(function (err, documents){
+        if (err){
+          res.status(400).send({message: 'An error occured when finding your document'});
+        }
+
+        if (documents.length === 0) {
+          res.status(409).send({message: 'No documents for user'});
+        }
+        else {
+          res.status(200).json(documents);
+        }
+      })
   },
-  find: function(req, res){
+  findOne: function(req, res){
     Document.findById(req.params.document_id, function(err, document){
       if (err){
         res.status(400).send({message: 'An error occured when finding your document'});
@@ -50,12 +60,12 @@ module.exports = {
         res.status(400).send({message: 'An error occured when finding your document'});
       }
       else {
-        if(document.ownerId)
-          document.ownerId = req.decoded._id;
-        if(document.title)
+        if(req.body.title)
           document.title = req.body.title;
-        if(document.content)
+        if(req.body.content)
           document.content = req.body.content;
+        if(req.body.accessLevel)
+          document.accessLevel = req.body.accessLevel;
 
         document.save(function(err){
           if (err){

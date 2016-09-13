@@ -6,11 +6,6 @@ var userRoute = require('./user_route'),
   config = require('../../config/config');
 
 module.exports = function(router){
-  router.get('/', function(req, res) {
-    console.log('Hello world');
-    res.status(200).send({message: 'hello world'});
-  });
-
   router.post('/users/login', function(req, res){
     User.findOne({ email: req.body.email})
       .select('email password')
@@ -52,6 +47,7 @@ module.exports = function(router){
         if (err){
           res.status(400).send({message: 'Failed to authenticate token'});
         }else {
+
           req.decoded = decoded;
           next();
         }
