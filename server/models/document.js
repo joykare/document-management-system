@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var mongoosePaginate = require('mongoose-paginate');
 
 var documentSchema = new Schema ({
   ownerId: {
@@ -21,7 +20,6 @@ var documentSchema = new Schema ({
 
 },{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'}});
 
-documentSchema.plugin(mongoosePaginate);
 var Document = mongoose.model('Document', documentSchema);
 
 module.exports = Document;

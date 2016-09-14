@@ -58,7 +58,7 @@ describe('document test suite', function() {
           expect(Array.isArray(res.body)).to.equal(true);
           documentId = res.body[0]._id;
           done();
-        });
+      });
     });
   });
 
@@ -81,7 +81,8 @@ describe('document test suite', function() {
         .set('x-access-token', token)
         .send({
           title: 'Updated Doc',
-          content: 'Whatever'
+          content: 'Whatever',
+          accessLevel: 'private'
         })
         .expect(200)
         .expect({message: 'Document has been updated'}, done);

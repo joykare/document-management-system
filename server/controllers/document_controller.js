@@ -1,4 +1,6 @@
 var Document = require('../models/document');
+var User = require('../models/user');
+var Role = require('../models/role');
 
 module.exports = {
   create: function(req, res){
@@ -20,12 +22,18 @@ module.exports = {
       res.status(200).send({message: 'New document created'});
     });
   },
-  getAll: function(req, res){
+  all: function(req, res){
     var limit = req.query.limit || req.headers['limit'];
     var skip = req.query.skip || req.headers['skip'];
+    var date = req.query.date;
+    var role = req.query.role;
 
-    Document.find({ 
-        $or : [{ownerId: req.decoded._id}, {accessLevel: 'public'}]
+    if (date){
+      var start = date + 'T00:00:00Z';
+      var end = date + 'T23:59:59Z';
+
+      Document.find({
+        $and : [{createdAt: {$gte: start, $lt: end}}]
       })
       .skip(parseInt(skip) || 0)
       .limit(parseInt(limit) || 10)
@@ -36,14 +44,44 @@ module.exports = {
         }
 
         if (documents.length === 0) {
-          res.status(409).send({message: 'No documents for user'});
+          res.status(409).send({message: 'No documents for this date'});
         }
         else {
           res.status(200).json(documents);
         }
       })
+    } else if (role) {
+      Role.findOne({ title: role }, function(err, role){
+          User.find({ role: role._id }, function(err, users){
+            users.forEach(function (user){
+              Document.find({ ownerId: user._id }, function(err, documents){
+                res.send(documents)
+              })
+            })
+          })
+        })
+    } else {
+      Document.find({
+          $or : [{ownerId: req.decoded._id}, {accessLevel: 'public'}]
+        })
+        .skip(parseInt(skip) || 0)
+        .limit(parseInt(limit) || 10)
+        .sort('createdAt')
+        .exec(function (err, documents){
+          if (err){
+            res.status(400).send({message: 'An error occured when finding your document'});
+          }
+
+          if (documents.length === 0) {
+            res.status(409).send({message: 'No documents for user'});
+          }
+          else {
+            res.status(200).json(documents);
+          }
+        })
+    }
   },
-  findOne: function(req, res){
+  find: function(req, res){
     Document.findById(req.params.document_id, function(err, document){
       if (err){
         res.status(400).send({message: 'An error occured when finding your document'});
@@ -84,5 +122,6 @@ module.exports = {
         }
         res.status(200).send({message: 'Document has been deleted'});
       });
-  }
+  },
+
 };
