@@ -47,13 +47,13 @@ var userSchema = new Schema ({
 });
 
 // hash password before user is saved
-userSchema.pre('save', function(next){
+userSchema.pre('save', function (next) {
   var user = this;
   // hash only if the password has been changed OR user is new
   if (!user.isModified('password'))
     return next();
   //generate the hash
-  bcrypt.hash(user.password, null, null, function(err, hash){
+  bcrypt.hash(user.password, null, null, function (err, hash) {
     if (err)
       return next(err);
     user.password = hash;
@@ -62,7 +62,7 @@ userSchema.pre('save', function(next){
 });
 
 // method to compare a give password with the db hash
-userSchema.methods.comparePassword = function(password) {
+userSchema.methods.comparePassword = function (password) {
   var user = this;
   return bcrypt.compareSync(password, user.password);
 };

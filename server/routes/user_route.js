@@ -1,7 +1,6 @@
 var User = require('../controllers/user_controller');
 
-module.exports = function(router){
-
+module.exports = function (router) {
   router.route('/users')
     .post(User.create)
     .get(User.get);
@@ -12,4 +11,4 @@ module.exports = function(router){
     .delete(User.remove);
 
   router.get('/users/:user_id/documents', User.findUserDocuments);
-}
+};

@@ -1,9 +1,8 @@
 var mongoose = require('mongoose');
-var seed = require('./seed');
 var config = require('../config/config');
 var User = require('../server/models/user');
 var Role = require('../server/models/role');
-var Document = require('../server/models/document')
+var Document = require('../server/models/document');
 
 mongoose.connect(config.test_database, function(err){
   if(err) {

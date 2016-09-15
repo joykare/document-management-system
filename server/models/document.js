@@ -21,7 +21,7 @@ var documentSchema = new Schema ({
     type: Schema.Types.ObjectId,
     ref: 'Role'
   }
-},{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'}});
+},{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'} });
 
 var Document = mongoose.model('Document', documentSchema);
 

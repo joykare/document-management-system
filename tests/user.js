@@ -3,32 +3,31 @@ var request = require('supertest')(app);
 var expect = require('chai').expect;
 var User = require('../server/models/user');
 
-describe('user test suite', function() {
+describe('user test suite', function () {
   var token;
   var userId;
 
-  before(function(done){
+  before(function (done) {
     request
       .post('/api/users/login')
       .send({
         email: 'jwarugu@gmail.com',
         password: 'jwarugu'
       })
-      .end(function(err, res){
-        if (err) return done(err);
+      .end(function (err, res) {
+        if (err) { return done(err); }
         token = res.body.token;
         done();
-      })
+      });
   });
 
-  describe('/users CRUD operations', function() {
-    it('route that returns all users', function(done){
+  describe('/users CRUD operations', function () {
+    it('route that returns all users', function (done) {
       request
         .get('/api/users')
         .set('x-access-token', token)
         .expect(200)
-        .end(function (err, res){
-          if (err) return done(err);
+        .end(function (err, res) {
           expect(res.body).to.have.length(4);
           expect(Array.isArray(res.body)).to.equal(true);
           userId = res.body[0]._id;
@@ -36,7 +35,7 @@ describe('user test suite', function() {
         });
     });
 
-    it('creates a user in the db', function(done){
+    it('creates a user in the db', function (done) {
       request
         .post('/api/users')
         .set('x-access-token', token)
@@ -49,10 +48,10 @@ describe('user test suite', function() {
           role: 'user'
         })
         .expect(200)
-        .expect({message: 'New user created'}, done)
+        .expect({message: 'New user created'}, done);
     });
 
-    it('asserts that no duplicates can be created', function(done){
+    it('asserts that no duplicates can be created', function (done) {
       var username = User.schema.paths.username;
       var email = User.schema.paths.email;
 
@@ -74,7 +73,7 @@ describe('user test suite', function() {
         .expect({message: 'Duplicate entry'}, done);
     });
 
-    it('asserts that last and first names are required', function(done){
+    it('asserts that last and first names are required', function (done) {
       request
         .post('/api/users')
         .set('x-access-token', token)
@@ -88,13 +87,13 @@ describe('user test suite', function() {
         .expect({message: 'Error occured while saving the user'}, done);
     });
 
-    it('asserts that a new user has a role defined', function(done){
+    it('asserts that a new user has a role defined', function (done) {
       var role = User.schema.paths.role;
       expect(role.options.required).to.equal(true);
       done();
     });
 
-    it('asserts that a role does not exist is flagged', function(done){
+    it('asserts that a role does not exist is flagged', function (done) {
       request
         .post('/api/users')
         .set('x-access-token', token)
@@ -110,13 +109,13 @@ describe('user test suite', function() {
     });
   });
 
-  describe('/users/:user_id CRUD operations', function(){
-    it('finds a user with matching id', function(done){
+  describe('/users/:user_id CRUD operations', function () {
+    it('finds a user with matching id', function (done) {
       request
         .get('/api/users/' + userId)
         .set('x-access-token', token)
         .expect(200)
-        .end(function(err, res){
+        .end(function (err, res) {
           expect(res.body).to.exist;
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.keys('_id', 'email', 'username', 'name', 'role', '__v');
@@ -124,7 +123,7 @@ describe('user test suite', function() {
         });
     });
 
-    it('find a non-existent user', function(done){
+    it('find a non-existent user', function (done) {
       request
         .get('/api/users/57d11f35b0a303c1234569df')
         .set('x-access-token', token)
@@ -132,7 +131,7 @@ describe('user test suite', function() {
         .expect({message: 'User not found'}, done);
     });
 
-    it('updates a particular user data', function(done){
+    it('updates a particular user data', function (done) {
       request
         .put('/api/users/' + userId)
         .set('x-access-token', token)
@@ -143,32 +142,32 @@ describe('user test suite', function() {
           password: 'njeri',
           email: 'njeri@gmail.com'
         })
-        .end(function (err, res){
+        .end(function (err, res) {
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('User has been updated');
           done();
         });
     });
 
-    it('updating a user that doesnt exist', function(done){
+    it('updating a user that doesnt exist', function (done) {
       request
         .put('/api/users/57d11f35b0a303c1234569df')
         .set('x-access-token', token)
         .send({
           username: 'njerry',
         })
-        .end(function (err, res){
+        .end(function (err, res) {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('User not found');
           done();
         });
     });
 
-    it('returns all documents belonging to a particular user', function(done){
+    it('returns all documents belonging to a particular user', function (done) {
       request
         .get('/api/users/' + userId + '/documents')
         .set('x-access-token', token)
-        .end(function (err, res){
+        .end(function (err, res) {
           expect(res.body).to.exist;
           expect(Array.isArray(res.body)).to.equal(true);
           expect(res.body[0]).to.have.keys('_id', 'title', 'ownerId', 'role', 'accessLevel', 'content', 'modifiedAt', 'createdAt', '__v');
@@ -176,19 +175,19 @@ describe('user test suite', function() {
         });
     });
 
-    it('asserts that cannot find documents o a non-existent user', function(done){
+    it('asserts that cannot find documents o a non-existent user', function (done) {
       request
         .get('/api/users/57d11f35b0a303c1234569df/documents')
         .set('x-access-token', token)
         .expect(404)
-        .expect({message: 'User not found'}, done)
+        .expect({message: 'User not found'}, done);
     });
 
-    it('deletes a particular user inforation', function(done){
+    it('deletes a particular user inforation', function (done) {
       request
         .delete('/api/users/' + userId)
         .set('x-access-token', token)
         .expect({message: 'User has been deleted'}, done);
     });
   });
-})
+});

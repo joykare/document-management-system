@@ -1,7 +1,6 @@
 var Document = require('../controllers/document_controller');
 
-module.exports = function(router) {
-
+module.exports = function (router) {
   router.route('/documents')
     .post(Document.create)
     .get(Document.all);
@@ -10,5 +9,4 @@ module.exports = function(router) {
     .get(Document.find)
     .put(Document.update)
     .delete(Document.remove);
-
-}
+};
