@@ -129,31 +129,31 @@ describe('document test suite', function() {
           .set('x-access-token', token)
           .expect({message: 'No documents for this date'}, done);
       })
-      // it('gets documents published by the same role level(admin)', function(done){
-      //   request
-      //     .get('/api/documents?role=admin')
-      //     .set('x-access-token', token)
-      //     .end(function (err, res){
-      //       expect(res.status).to.equal(200);
-      //       expect(res.body).to.exist;
-      //       expect(Array.isArray(res.body)).to.equal(true);
-      //       expect(res.body).to.have.length(3);
-      //       done();
-      //     })
-      // })
+      it('gets documents published by the same role level(admin)', function(done){
+        request
+          .get('/api/documents?role=admin')
+          .set('x-access-token', token)
+          .end(function (err, res){
+            expect(res.status).to.equal(200);
+            expect(res.body).to.exist;
+            expect(Array.isArray(res.body)).to.equal(true);
+            expect(res.body).to.have.length(4);
+            done();
+          })
+      })
 
-      // it('gets documents published by the same role level(user)', function(done){
-      //   request
-      //     .get('/api/documents?role=user')
-      //     .set('x-access-token', token)
-      //     .end(function (err, res){
-      //       expect(res.status).to.equal(200);
-      //       expect(res.body).to.exist;
-      //       expect(Array.isArray(res.body)).to.equal(true);
-      //       expect(res.body).to.have.length(2);
-      //       done();
-      //     })
-      // })
+      it('gets documents published by the same role level(user)', function(done){
+        request
+          .get('/api/documents?role=user')
+          .set('x-access-token', token)
+          .end(function (err, res){
+            expect(res.status).to.equal(200);
+            expect(res.body).to.exist;
+            expect(Array.isArray(res.body)).to.equal(true);
+            expect(res.body).to.have.length(3);
+            done();
+          })
+      })
   });
 
   describe('/documents/:id test suite', function(){

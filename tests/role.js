@@ -43,17 +43,16 @@ describe('role test suite', function() {
         done();
       });
   });
-  // it('asserts that one cant create role not specified', function(done){
-  //   request
-  //     .post('/api/roles')
-  //     .set('x-access-token', token)
-  //     .send({
-  //       role: 'viewer'
-  //     })
-  //     .end(function (err, res){
-  //       expect(res.body.message).to.equal('Is not an allowable role');
-  //       done();
-  //     });
-  // })
-
+  it('asserts that you cannot create role not in array', function(done){
+    request
+      .post('/api/roles')
+      .set('x-access-token', token)
+      .send({
+        role: 'viewer'
+      })
+      .end(function (err, res){
+        expect(res.body.message).to.equal('Is not an allowable role');
+        done();
+      })
+  })
 });
