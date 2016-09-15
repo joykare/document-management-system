@@ -10,7 +10,7 @@ module.exports = {
       },
       email: 'jwarugu@gmail.com',
       password: 'jwarugu',
-      role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+      role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
     },
     {
       _id: mongoose.Types.ObjectId('54d11f35b0a303c1112345db'),
@@ -57,18 +57,29 @@ module.exports = {
   documents : [{
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'Hey',
-    content: 'Hello World'
+    content: 'Hello World',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'User',
-    content: 'Next document'
+    content: 'Next document',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
   }, {
+    ownerId: mongoose.Types.ObjectId('57d11f35b0a303c6789079fd'),
+    title: 'This',
+    content: 'This this this',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+  }, {
+    ownerId: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
+    title: 'That',
+    content: 'That that that',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+  },
+  {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'Try',
-    content: 'Out of content'
+    content: 'Out of content',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
   }
 ]
-
-
-
-  }
+}

@@ -171,7 +171,7 @@ describe('user test suite', function() {
         .end(function (err, res){
           expect(res.body).to.exist;
           expect(Array.isArray(res.body)).to.equal(true);
-          expect(res.body[0]).to.have.keys('_id', 'title', 'ownerId', 'content', 'modifiedAt', 'createdAt', '__v');
+          expect(res.body[0]).to.have.keys('_id', 'title', 'ownerId', 'role', 'accessLevel', 'content', 'modifiedAt', 'createdAt', '__v');
           done();
         });
     });

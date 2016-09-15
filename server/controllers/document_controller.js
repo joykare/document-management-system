@@ -9,6 +9,7 @@ module.exports = {
     document.ownerId = req.decoded._id;
     document.title = req.body.title;
     document.content = req.body.content;
+    document.role = req.decoded.role;
     if(req.body.accessLevel) {document.accessLevel = req.body.accessLevel}
 
     document.save(function(err){
@@ -18,8 +19,9 @@ module.exports = {
         } else {
           res.status(400).send({message: 'Error occured while saving the document'});
         }
+      } else {
+        res.status(200).send({message: 'New document created'});
       }
-      res.status(200).send({message: 'New document created'});
     });
   },
   all: function(req, res){
@@ -33,7 +35,10 @@ module.exports = {
       var end = date + 'T23:59:59Z';
 
       Document.find({
-        $and : [{createdAt: {$gte: start, $lt: end}}]
+        $and : [{createdAt: {$gte: start, $lt: end}}, {
+          $or: [
+          {accessLevel: 'public'}, {ownerId: req.decoded._id}]}
+        ]
       })
       .skip(parseInt(skip) || 0)
       .limit(parseInt(limit) || 10)
@@ -51,15 +56,20 @@ module.exports = {
         }
       })
     } else if (role) {
-      Role.findOne({ title: role }, function(err, role){
-          User.find({ role: role._id }, function(err, users){
-            users.forEach(function (user){
-              Document.find({ ownerId: user._id }, function(err, documents){
-                res.send(documents)
-              })
-            })
-          })
+      Role.findOne({title: role}, function(err, role){
+        Document.find({
+          $and: [
+            {role: role._id},
+            {$or: [
+              {accessLevel: 'public'}, {ownerId: req.decoded._id}]}
+          ]
         })
+          .limit(parseInt(limit) || 10)
+          .exec(function(err, documents){
+            res.send(documents);
+          })
+      })
+
     } else {
       Document.find({
           $or : [{ownerId: req.decoded._id}, {accessLevel: 'public'}]
@@ -82,22 +92,29 @@ module.exports = {
     }
   },
   find: function(req, res){
-    Document.findById(req.params.document_id, function(err, document){
+    Document.findById(req.params.document_id)
+      .where('ownerId').equals(req.decoded._id)
+      .exec(function(err, document){
+        if (err){
+          res.status(400).send({message: 'An error occured when finding your document'});
+        }
+        if (!document) {
+          res.status(409).send({message: 'Document not found'});
+        } else {
+          res.status(200).json(document);
+        }
+      });
+  },
+  update: function(req, res){
+    Document.findById(req.params.document_id)
+    .where('ownerId').equals(req.decoded._id)
+    .exec(function(err, document){
       if (err){
         res.status(400).send({message: 'An error occured when finding your document'});
       }
       if (!document) {
-        res.status(409).send({message: 'Document not found'});
-      }
-      res.status(200).json(document);
-    });
-  },
-  update: function(req, res){
-    Document.findById(req.params.document_id, function(err, document){
-      if (err){
-        res.status(400).send({message: 'An error occured when finding your document'});
-      }
-      else {
+          res.status(409).send({message: 'Document not found'});
+      } else {
         if(req.body.title)
           document.title = req.body.title;
         if(req.body.content)
@@ -108,20 +125,24 @@ module.exports = {
         document.save(function(err){
           if (err){
             res.status(400).send({message: 'An error occured when saving your document'});
+          } else {
+            res.status(200).send({message: 'Document has been updated'});
           }
-          res.status(200).send({message: 'Document has been updated'});
         });
       }
     });
   },
   remove: function(req, res){
-    Document.remove(
-      {_id: req.params.document_id}, function(err){
-        if (err){
-          res.status(400).send({message: 'An error occured when deleting your document'});
-        }
-        res.status(200).send({message: 'Document has been deleted'});
-      });
-  },
+    Document.remove({
+       $and: [{ownerId: req.decoded._id},{_id: req.params.document_id}]
+    }, function(err){
+      if(err){
+        res.send(err);
+      } else {
+        res.send({message: 'Your document has been deleted'});
+      }
+    })
+
+  }
 
 };

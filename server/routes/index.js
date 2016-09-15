@@ -8,7 +8,7 @@ var userRoute = require('./user_route'),
 module.exports = function(router){
   router.post('/users/login', function(req, res){
     User.findOne({ email: req.body.email})
-      .select('email password')
+      .select('email password role')
       .exec(function (err, user){
         if (err){
           res.status(400).send({message: 'Failed to log in, try again'});
@@ -24,7 +24,8 @@ module.exports = function(router){
           } else {
             var token = jwt.sign({
               _id: user._id,
-              email: user.email
+              email: user.email,
+              role: user.role
             }, config.secret, {
               expiresIn: '24h'
             });
