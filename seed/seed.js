@@ -56,22 +56,25 @@ module.exports = {
     _id: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
   }],
 
-  documents: 
+  documents:
   [{
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'Hey',
     content: 'Hello World',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad'),
+    createdAt: '2016-09-14'
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'User',
     content: 'Next document',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad'),
+    createdAt: '2016-09-14'
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c6789079fd'),
     title: 'This',
     content: 'This this this',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af'),
+    createdAt: '2016-09-14'
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
     title: 'That',

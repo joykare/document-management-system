@@ -87,8 +87,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length(2);
-            expect(res.body[0].title).to.equal('Hey');
+            expect(res.body).to.have.length.of.at.most(2);
             done();
           });
     });
@@ -103,28 +102,21 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length(2);
+            expect(res.body).to.have.length.of.at.most(2);
             expect(res.body[0].title).to.equal('User');
             done();
           });
     });
 
     it('gets number of documents specified published on a certain date', function (done) {
-      var today = new Date();
-      var day = today.getDate();
-      var month = today.getMonth() + 1;
-      var year = today.getFullYear();
-      var date =  year + '-0' + month + '-' + day;
-
       request
-          .get('/api/documents?date=' + date)
+          .get('/api/documents?date=2016-09-14')
           .set('x-access-token', token)
-          .set('limit', 2)
           .end(function (err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length(2);
+            expect(res.body).to.have.length.of.at.most(3);
             done();
           });
     });
@@ -144,7 +136,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length(4);
+            expect(res.body).to.have.length.of.at.most(4);
             done();
           });
     });
@@ -157,7 +149,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length(3);
+            expect(res.body).to.have.length.of.at.most(3);
             done();
           });
     });
@@ -171,19 +163,9 @@ describe('document test suite', function () {
         .end(function (err, res) {
           expect(res.status).to.equal(200);
           expect(res.body).to.exist;
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('_id', 'title', 'content', 'role', 'modifiedAt', 'ownerId', 'accessLevel', 'createdAt', '__v');
-          done();
-        });
-    });
-
-    it('returns message if document not found', function (done) {
-      request
-        .get('/api/documents/57d11f44b0a303c1186273cf')
-        .set('x-access-token', token)
-        .end(function (err, res) {
-          expect(res.status).to.equal(409);
-          expect(res.body.message).to.equal('Document not found');
+          expect(Array.isArray(res.body)).to.equal(true);
+          expect(res.body[0]).to.be.an('object');
+          expect(res.body[0]).to.have.keys('_id', 'title', 'content', 'role', 'modifiedAt', 'ownerId', 'accessLevel', 'createdAt', '__v');
           done();
         });
     });

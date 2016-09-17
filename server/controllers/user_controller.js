@@ -84,8 +84,9 @@ module.exports = {
       {_id: req.params.user_id}, function (err) {
         if (err) {
           res.status(400).send({ message: 'Error occured while accessing the user.' });
+        } else {
+          res.status(200).send({ message: 'User has been deleted' });
         }
-        res.status(200).send({ message: 'User has been deleted' });
       });
   },
   findUserDocuments: function (req, res) {

@@ -23,6 +23,4 @@ var documentSchema = new Schema ({
   }
 },{ timestamps: {createdAt: 'createdAt', updatedAt: 'modifiedAt'} });
 
-var Document = mongoose.model('Document', documentSchema);
-
-module.exports = Document;
+module.exports = mongoose.model('Document', documentSchema);

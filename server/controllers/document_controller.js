@@ -34,13 +34,13 @@ module.exports = {
       var end = date + 'T23:59:59Z';
 
       Document.find({
-        $and : [ {createdAt: {$gte: start, $lt: end}}, {
+        $and : [ {createdAt: {$gte: start, $lte: end}}, {
           $or: [
           {accessLevel: 'public'}, {ownerId: req.decoded._id} ]}
         ]
       })
       .skip(parseInt(skip) || 0)
-      .limit(parseInt(limit) || 10)
+      .limit(parseInt(limit) || 0)
       .sort('createdAt')
       .exec(function (err, documents) {
         if (err) {
@@ -51,7 +51,7 @@ module.exports = {
           res.status(409).send({ message: 'No documents for this date' });
         }
         else {
-          res.status(200).json(documents);
+          res.status(200).send(documents);
         }
       });
     } else if (role) {
@@ -63,7 +63,7 @@ module.exports = {
               {accessLevel: 'public'}, {ownerId: req.decoded._id} ]}
           ]
         })
-          .limit(parseInt(limit) || 10)
+          .limit(parseInt(limit) || 0)
           .exec(function(err, documents){
             res.send(documents);
           });
@@ -74,7 +74,7 @@ module.exports = {
         $or : [ {ownerId: req.decoded._id}, {accessLevel: 'public'} ]
       })
         .skip(parseInt(skip) || 0)
-        .limit(parseInt(limit) || 10)
+        .limit(parseInt(limit) || 0)
         .sort('createdAt')
         .exec(function (err, documents) {
           if (err){
@@ -85,14 +85,17 @@ module.exports = {
             res.status(409).send({message: 'No documents for user'});
           }
           else {
-            res.status(200).json(documents);
+            res.status(200).send(documents);
           }
         });
     }
   },
   find: function (req, res) {
-    Document.findById(req.params.document_id)
-      .where('ownerId').equals(req.decoded._id)
+    Document.find({
+      $and: [ {_id: req.params.document_id}, {
+        $or: [ {ownerId: req.decoded._id}, {accessLevel: 'public'} ]}
+      ]
+    })
       .exec(function (err, document) {
         if (err){
           res.status(400).send({ message: 'An error occured when finding your document' });
@@ -100,13 +103,12 @@ module.exports = {
         if (!document) {
           res.status(409).send({ message: 'Document not found' });
         } else {
-          res.status(200).json(document);
+          res.status(200).send(document);
         }
       });
   },
   update: function (req, res) {
     Document.findById(req.params.document_id)
-    .where('ownerId').equals(req.decoded._id)
     .exec(function (err, document) {
       if (err) {
         res.status(400).send({ message: 'An error occured when finding your document' });

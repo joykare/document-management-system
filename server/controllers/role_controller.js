@@ -6,7 +6,7 @@ module.exports = {
       if (err) {
         res.status(400).send({ message: 'Error occured during request' });
       } else {
-        res.json(roles);
+        res.send(roles);
       }
     });
   },

@@ -22,7 +22,7 @@ describe('user test suite', function () {
   });
 
   describe('/users CRUD operations', function () {
-    it('route that returns all users', function (done) {
+    it('asserts that /users returns all users', function (done) {
       request
         .get('/api/users')
         .set('x-access-token', token)
@@ -151,7 +151,7 @@ describe('user test suite', function () {
 
     it('updating a user that doesnt exist', function (done) {
       request
-        .put('/api/users/57d11f35b0a303c1234569df')
+        .put('/api/users/57d11f35b0a303c1234886df')
         .set('x-access-token', token)
         .send({
           username: 'njerry',
@@ -175,7 +175,7 @@ describe('user test suite', function () {
         });
     });
 
-    it('asserts that cannot find documents o a non-existent user', function (done) {
+    it('asserts that cannot find documents of a non-existent user', function (done) {
       request
         .get('/api/users/57d11f35b0a303c1234569df/documents')
         .set('x-access-token', token)
