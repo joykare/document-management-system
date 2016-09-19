@@ -3,6 +3,17 @@ var request = require('supertest')(app);
 var expect = require('chai').expect;
 var Document = require('../server/models/document');
 
+describe('before login', function(){
+  it('asserts that one cannot access documents before login', function(done){
+    request
+      .get('/api/documents')
+      .end(function (err, res){
+        expect(res.body.message).to.equal('No token provided');
+        done();
+      });
+  });
+});
+
 describe('document test suite', function () {
   var token;
   var documentId;
@@ -51,6 +62,7 @@ describe('document test suite', function () {
         .expect(200)
         .expect({message: 'New document created'}, done);
     });
+    
     it('asserts that no duplicates are created', function (done) {
       request
         .post('/api/documents')
@@ -88,6 +100,7 @@ describe('document test suite', function () {
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
             expect(res.body).to.have.length.of.at.most(2);
+            expect(res.body[0].title).to.equal('Test Private');
             done();
           });
     });
@@ -103,7 +116,7 @@ describe('document test suite', function () {
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
             expect(res.body).to.have.length.of.at.most(2);
-            expect(res.body[0].title).to.equal('User');
+            expect(res.body[0].title).to.equal('Test Doc');
             done();
           });
     });
@@ -116,7 +129,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length.of.at.most(3);
+            expect(res.body).to.have.length(2);
             done();
           });
     });
@@ -136,7 +149,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length.of.at.most(4);
+            expect(res.body).to.have.length(4);
             done();
           });
     });
@@ -149,7 +162,7 @@ describe('document test suite', function () {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
-            expect(res.body).to.have.length.of.at.most(3);
+            expect(res.body).to.have.length(1);
             done();
           });
     });

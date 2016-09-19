@@ -3,6 +3,31 @@ var request = require('supertest')(app);
 var expect = require('chai').expect;
 var User = require('../server/models/user');
 
+describe('before login', function(){
+  it('asserts that one cannot access user info before login', function(done){
+    request
+      .get('/api/users')
+      .end(function (err, res){
+        expect(res.body.message).to.equal('No token provided');
+        done();
+      });
+  });
+  it('creates a user in the db', function (done) {
+    request
+      .post('/api/users')
+      .send({
+        username: 'user',
+        first: 'first',
+        last: 'last',
+        email: 'user@gmail.com',
+        password: 'user',
+        role: 'admin'
+      })
+      .expect(200)
+      .expect({message: 'New user created'}, done);
+  });
+});
+
 describe('user test suite', function () {
   var token;
   var userId;
@@ -11,8 +36,8 @@ describe('user test suite', function () {
     request
       .post('/api/users/login')
       .send({
-        email: 'jwarugu@gmail.com',
-        password: 'jwarugu'
+        email: 'user@gmail.com',
+        password: 'user'
       })
       .end(function (err, res) {
         if (err) { return done(err); }
@@ -28,27 +53,11 @@ describe('user test suite', function () {
         .set('x-access-token', token)
         .expect(200)
         .end(function (err, res) {
-          expect(res.body).to.have.length(4);
+          expect(res.body).to.have.length(5);
           expect(Array.isArray(res.body)).to.equal(true);
           userId = res.body[0]._id;
           done();
         });
-    });
-
-    it('creates a user in the db', function (done) {
-      request
-        .post('/api/users')
-        .set('x-access-token', token)
-        .send({
-          username: 'user',
-          first: 'first',
-          last: 'last',
-          email: 'user@gmail.com',
-          password: 'user',
-          role: 'user'
-        })
-        .expect(200)
-        .expect({message: 'New user created'}, done);
     });
 
     it('asserts that no duplicates can be created', function (done) {
@@ -67,7 +76,7 @@ describe('user test suite', function () {
           last: 'last',
           email: 'user@gmail.com',
           password: 'user',
-          role: 'user'
+          role: 'admin'
         })
         .expect(409)
         .expect({message: 'Duplicate entry'}, done);

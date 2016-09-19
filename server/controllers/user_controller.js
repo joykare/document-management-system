@@ -1,8 +1,43 @@
 var User = require('../models/user.js');
 var Document = require('../models/document.js');
 var Role = require('../models/role.js');
+var jwt = require('jsonwebtoken');
+var config = require('../../config/config');
 
 module.exports = {
+  login: function (req, res) {
+    User.findOne( {email: req.body.email} )
+      .select('email password role')
+      .populate('role')
+      .exec(function (err, user) {
+        if (err) {
+          res.status(400).send({ message: 'Failed to log in, try again' });
+        }
+        if (!user) {
+          res.status(401).send({ message: 'Email does not exist' });
+        }
+        else if (user) {
+          var validPassword = user.comparePassword(req.body.password);
+
+          if(!validPassword) {
+            res.status(401).send({ message: 'Wrong password' });
+          } else {
+            var token = jwt.sign({
+              _id: user._id,
+              email: user.email,
+              role: user.role
+            }, config.secret, {
+              expiresIn: '24h'
+            });
+
+            res.status(200).send({
+              message: 'Enjoy your token',
+              token: token
+            });
+          }
+        }
+      });
+  },
   create: function (req, res) {
     var user = new User();
     user.username = req.body.username;
@@ -44,7 +79,7 @@ module.exports = {
     });
   },
   update: function (req, res) {
-    User.findById(req.params.user_id, function (err, user) {
+    User.findById(req.params.user_id, function(err, user){
       if (err){
         res.status(400).send({ message: 'Error occured while accessing the user.' });
       }

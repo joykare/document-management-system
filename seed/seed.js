@@ -3,15 +3,15 @@ var mongoose = require('mongoose');
 module.exports = {
   users:
   [{
-    _id: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
-    username: 'jwarugu',
+    _id: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
+    username: 'emabishi',
     name: {
-      first: 'joy',
-      last: 'warugu'
+      first: 'elizabeth',
+      last: 'mabishi'
     },
-    email: 'jwarugu@gmail.com',
-    password: 'jwarugu',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
+    email: 'emabishi@gmail.com',
+    password: 'emabishi',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
   },
   {
     _id: mongoose.Types.ObjectId('54d11f35b0a303c1112345db'),
@@ -25,15 +25,15 @@ module.exports = {
     role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
   },
   {
-    _id: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
-    username: 'emabishi',
+    _id: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
+    username: 'jwarugu',
     name: {
-      first: 'elizabeth',
-      last: 'mabishi'
+      first: 'joy',
+      last: 'warugu'
     },
-    email: 'emabishi@gmail.com',
-    password: 'emabishi',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+    email: 'jwarugu@gmail.com',
+    password: 'jwarugu',
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
   },
   {
     _id: mongoose.Types.ObjectId('57d11f35b0a303c6789079fd'),
@@ -62,7 +62,8 @@ module.exports = {
     title: 'Hey',
     content: 'Hello World',
     role: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad'),
-    createdAt: '2016-09-14'
+    createdAt: '2016-09-14',
+    accessLevel: 'private'
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'User',
@@ -74,17 +75,21 @@ module.exports = {
     title: 'This',
     content: 'This this this',
     role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af'),
-    createdAt: '2016-09-14'
+    createdAt: '2016-09-14',
+    accessLevel: 'private'
   }, {
     ownerId: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
     title: 'That',
     content: 'That that that',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af'),
+    createdAt: '2016-09-15',
+    accessLevel: 'private'
   },
   {
     ownerId: mongoose.Types.ObjectId('57d11f35b0a303c7865279bd'),
     title: 'Try',
     content: 'Out of content',
-    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
+    role: mongoose.Types.ObjectId('57d11f35b0a303c1186279af'),
+    createdAt: '2016-09-16'
   }]
 };

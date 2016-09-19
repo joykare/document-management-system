@@ -41,7 +41,7 @@ module.exports = {
       })
       .skip(parseInt(skip) || 0)
       .limit(parseInt(limit) || 0)
-      .sort('createdAt')
+      .sort('-createdAt')
       .exec(function (err, documents) {
         if (err) {
           res.status(400).send({ message: 'An error occured when finding your document' });
@@ -59,7 +59,7 @@ module.exports = {
         Document.find({
           $and: [
             { role: role._id },
-            {$or: [
+            { $or: [
               {accessLevel: 'public'}, {ownerId: req.decoded._id} ]}
           ]
         })
@@ -75,7 +75,7 @@ module.exports = {
       })
         .skip(parseInt(skip) || 0)
         .limit(parseInt(limit) || 0)
-        .sort('createdAt')
+        .sort('-createdAt')
         .exec(function (err, documents) {
           if (err){
             res.status(400).send({message: 'An error occured when finding your document'});
