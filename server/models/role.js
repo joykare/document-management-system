@@ -5,7 +5,12 @@ var roleSchema = new Schema ({
   title: {
     type: String,
     required: true,
-    enum: ['superadmin', 'admin', 'user']
+    unique: true
+  },
+  permissions: {
+    type: String,
+    required: true,
+    enum: ['read', 'readwrite']
   }
 });
 

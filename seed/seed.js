@@ -50,9 +50,11 @@ module.exports = {
   roles:
   [{
     title: 'admin',
+    permissions: 'readwrite',
     _id: mongoose.Types.ObjectId('57d11f35b0a303c1186270ad')
   }, {
     title: 'user',
+    permissions: 'read',
     _id: mongoose.Types.ObjectId('57d11f35b0a303c1186279af')
   }],
 

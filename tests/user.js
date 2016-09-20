@@ -103,21 +103,6 @@ describe('user test suite', function () {
       expect(role.options.required).to.equal(true);
       done();
     });
-
-    it('asserts that a role does not exist is flagged', function (done) {
-      request
-        .post('/api/users')
-        .set('x-access-token', token)
-        .send({
-          username: 'user',
-          first: 'first',
-          last: 'last',
-          email: 'user@gmail.com',
-          password: 'user',
-          role: 'viewer'
-        })
-        .expect({message: 'No such role exists'}, done);
-    });
   });
 
   describe('/users/:user_id CRUD operations', function () {

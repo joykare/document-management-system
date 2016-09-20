@@ -79,7 +79,7 @@ module.exports = {
     });
   },
   update: function (req, res) {
-    if (req.decoded.role.title === 'admin') {
+    if (req.decoded.role.permissions === 'readwrite') {
       User.findById(req.params.user_id, function(err, user){
         if (err){
           res.status(400).send({ message: 'Error occured while accessing the user.' });
@@ -140,7 +140,7 @@ module.exports = {
     });
   },
   remove: function (req, res) {
-    if(req.decoded.role.title === 'admin') {
+    if(req.decoded.role.permissions === 'readwrite') {
       User.remove({ _id: req.params.user_id }, function(err) {
         if (err) {
           res.send(err);
