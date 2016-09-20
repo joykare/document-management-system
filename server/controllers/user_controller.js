@@ -79,28 +79,53 @@ module.exports = {
     });
   },
   update: function (req, res) {
-    User.findById(req.params.user_id, function(err, user){
-      if (err){
-        res.status(400).send({ message: 'Error occured while accessing the user.' });
-      }
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
-      }
-      else{
-        if (req.body.username) { user.username = req.body.username; }
-        if (req.body.first || req.body.last) { user.name = {first: req.body.first, last: req.body.last}; }
-        if (req.body.email) { user.email = req.body.email; }
-        if (req.body.password) { user.password= req.body.password; }
+    if (req.decoded.role.title === 'admin') {
+      User.findById(req.params.user_id, function(err, user){
+        if (err){
+          res.status(400).send({ message: 'Error occured while accessing the user.' });
+        }
+        if (!user) {
+          res.status(404).send({ message: 'User not found' });
+        }
+        else{
+          if (req.body.username) { user.username = req.body.username; }
+          if (req.body.first || req.body.last) { user.name = {first: req.body.first, last: req.body.last}; }
+          if (req.body.email) { user.email = req.body.email; }
+          if (req.body.password) { user.password= req.body.password; }
 
-        user.save(function (err) {
-          if (err) {
-            res.status(400).send({ message: 'Error occured while saving the user.' });
-          } else {
-            res.status(200).send({ message: 'User has been updated' });
-          }
-        });
-      }
-    });
+          user.save(function (err) {
+            if (err) {
+              res.status(400).send({ message: 'Error occured while saving the user.' });
+            } else {
+              res.status(200).send({ message: 'User has been updated' });
+            }
+          });
+        }
+      });
+    } else {
+      User.findOne({
+        $and: [{_id: req.params.user_id}, {_id: req.decoded._id}]
+      }, function (err, user) {
+        if (err) {
+          res.status(400).send({ message: 'Error occured while accessing the user.' });
+        } else if (!user) {
+          res.send({message: 'Not allowed to update this user'});
+        } else {
+          if (req.body.username) { user.username = req.body.username; }
+          if (req.body.first || req.body.last) { user.name = {first: req.body.first, last: req.body.last}; }
+          if (req.body.email) { user.email = req.body.email; }
+          if (req.body.password) { user.password= req.body.password; }
+
+          user.save(function (err) {
+            if (err) {
+              res.status(400).send({ message: 'Error occured while saving the user.' });
+            } else {
+              res.status(200).send({ message: 'User has been updated' });
+            }
+          });
+        }
+      });
+    }
   },
   find: function (req, res) {
     User.findOne( {_id: req.params.user_id}, function (err, user) {
@@ -115,14 +140,33 @@ module.exports = {
     });
   },
   remove: function (req, res) {
-    User.remove(
-      {_id: req.params.user_id}, function (err) {
+    if(req.decoded.role.title === 'admin') {
+      User.remove({ _id: req.params.user_id }, function(err) {
         if (err) {
-          res.status(400).send({ message: 'Error occured while accessing the user.' });
+          res.send(err);
         } else {
           res.status(200).send({ message: 'User has been deleted' });
         }
       });
+    } else {
+      User.findOne({
+        $and: [{_id: req.params.user_id}, {_id: req.decoded._id}]
+      }, function (err, user) {
+        if (err) {
+          res.status(400).send({ message: 'Error occured while accessing the user.' });
+        } else if (!user) {
+          res.send({message: 'Not allowed to delete users'});
+        } else {
+          user.remove({_id: req.params.user_id}, function(err){
+            if (err) {
+              res.send(err);
+            } else {
+              res.status(200).send({ message: 'User has been deleted' });
+            }
+          });
+        }
+      });
+    }
   },
   findUserDocuments: function (req, res) {
     User.findById(req.params.user_id, function (err, user) {
@@ -132,11 +176,18 @@ module.exports = {
       if (!user) {
         res.status(404).send({ message: 'User not found' });
       } else {
-        Document.find( {ownerId: user._id} ).exec(function (err, documents){
+        Document.find({
+          $and: [ {ownerId: user._id}, {
+            $or: [ {accessLevel: 'public'}, {ownerId: req.decoded._id} ]
+          }]
+        })
+        .exec(function (err, documents){
           if (err){
             res.status(400).send({ message: 'Error occured while getting documents' });
+          } else if (documents.length === 0) {
+            res.send({ message: 'No documents present for this user' });
           } else {
-            res.json(documents);
+            res.send(documents);
           }
         });
       }

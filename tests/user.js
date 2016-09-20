@@ -31,6 +31,7 @@ describe('before login', function(){
 describe('user test suite', function () {
   var token;
   var userId;
+  var userId2;
 
   before(function (done) {
     request
@@ -56,6 +57,7 @@ describe('user test suite', function () {
           expect(res.body).to.have.length(5);
           expect(Array.isArray(res.body)).to.equal(true);
           userId = res.body[0]._id;
+          userId2 = res.body[2]._id;
           done();
         });
     });
@@ -172,9 +174,19 @@ describe('user test suite', function () {
         });
     });
 
-    it('returns all documents belonging to a particular user', function (done) {
+    it('returns message if no documents exist for user instance', function (done) {
       request
         .get('/api/users/' + userId + '/documents')
+        .set('x-access-token', token)
+        .end(function (err, res) {
+          expect(res.body.message).to.equal('No documents present for this user');
+          done();
+        });
+    });
+
+    it('returns documents belonging to a particular user', function (done) {
+      request
+        .get('/api/users/' + userId2 + '/documents')
         .set('x-access-token', token)
         .end(function (err, res) {
           expect(res.body).to.exist;
@@ -192,7 +204,7 @@ describe('user test suite', function () {
         .expect({message: 'User not found'}, done);
     });
 
-    it('deletes a particular user inforation', function (done) {
+    it('deletes user', function (done) {
       request
         .delete('/api/users/' + userId)
         .set('x-access-token', token)

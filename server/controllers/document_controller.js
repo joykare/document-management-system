@@ -5,7 +5,7 @@ module.exports = {
   create: function (req, res) {
     var document = new Document();
 
-    document.ownerId = req.decoded._id;
+    document.ownerId = req.decoded._id || req.body.ownerId;
     document.title = req.body.title;
     document.content = req.body.content;
     document.role = req.decoded.role;
@@ -108,7 +108,11 @@ module.exports = {
       });
   },
   update: function (req, res) {
-    Document.findById(req.params.document_id)
+    Document.findOne({
+      $and: [ {_id: req.params.document_id}, {
+        $or: [ {ownerId: req.decoded._id}, {accessLevel: 'public'} ]}
+      ]
+    })
     .exec(function (err, document) {
       if (err) {
         res.status(400).send({ message: 'An error occured when finding your document' });
@@ -131,13 +135,21 @@ module.exports = {
     });
   },
   remove: function(req, res) {
-    Document.remove({
+    Document.findOne({
       $and: [ {ownerId: req.decoded._id}, {_id: req.params.document_id} ]
-    }, function (err) {
+    }, function (err, document) {
       if (err) {
         res.send(err);
+      } else if (!document) {
+        res.send({message: 'You are not authorized to delete document'});
       } else {
-        res.send({message: 'Your document has been deleted'});
+        document.remove({_id: req.params.document_id}, function(err){
+          if (err) {
+            res.send(err);
+          } else {
+            res.send({message: 'Your document has been deleted'});
+          }
+        });
       }
     });
   },
