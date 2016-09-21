@@ -56,7 +56,7 @@ describe('document test suite', function () {
         .set('x-access-token', token)
         .send({
           title: 'Test Private',
-          content: 'yeay',
+          content: 'yeaay',
           accessLevel: 'private'
         })
         .expect(200)
