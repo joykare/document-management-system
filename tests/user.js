@@ -197,3 +197,82 @@ describe('user test suite', function () {
     });
   });
 });
+
+describe('restricted user methods', function () {
+  var token;
+  var userId;
+  var userId2;
+
+  before (function (done) {
+    request
+      .post('/api/users/login')
+      .send({
+        email: 'skieha@gmail.com',
+        password: 'skieha'
+      })
+      .end(function (err, res) {
+        if (err) { return done(err); }
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('asserts that user with read rights can get users', function (done) {
+    request
+      .get('/api/users')
+      .set('x-access-token', token)
+      .expect(200)
+      .end(function (err, res) {
+        expect(Array.isArray(res.body)).to.equal(true);
+        userId = res.body[2]._id;
+        userId2 = res.body[0]._id;
+        done();
+      });
+  });
+
+  it('returns a restricted message on update of other user', function (done) {
+    request
+      .put('/api/users/' + userId)
+      .set('x-access-token', token)
+      .send({
+        username: 'tonee'
+      })
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('Not allowed to update this user');
+        done();
+      });
+  });
+
+  it('updates if the user updates own profile', function (done) {
+    request
+      .put('/api/users/' + userId2)
+      .set('x-access-token', token)
+      .send({
+        username: 'werry'
+      })
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('User has been updated');
+        done();
+      });
+  });
+
+  it('returns a restricted message on delete of other user', function (done) {
+    request
+      .delete('/api/users/' + userId)
+      .set('x-access-token', token)
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('Not allowed to delete users');
+        done();
+      });
+  });
+
+  it('allowed to delete own profile', function (done) {
+    request
+      .delete('/api/users/' + userId2)
+      .set('x-access-token', token)
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('User has been deleted');
+        done();
+      });
+  });
+});

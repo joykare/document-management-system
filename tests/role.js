@@ -98,3 +98,73 @@ describe('role test suite', function () {
       });
   });
 });
+
+describe('user without readwrite permissions', function () {
+  var token;
+  var roleId;
+
+  before (function (done) {
+    request
+      .post('/api/users/login')
+      .send({
+        email: 'skieha@gmail.com',
+        password: 'skieha'
+      })
+      .end(function (err, res) {
+        if (err) { return done(err); }
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('creates a role', function (done) {
+    request
+      .post('/api/roles')
+      .set('x-access-token', token)
+      .send({
+        role: 'superadmin',
+        permissions: 'readwrite'
+      })
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('You are not authorized to execute action');
+        done();
+      });
+  });
+
+  it('returns all the roles availed', function (done) {
+    request
+      .get('/api/roles')
+      .set('x-access-token', token)
+      .end(function (err, res) {
+        expect(res.body).to.exist;
+        expect(Array.isArray(res.body)).to.equal(true);
+        expect(res.body).to.have.length.of.at.most(2);
+        roleId = res.body[0]._id;
+        done();
+      });
+  });
+
+  it('asserts that role can be updated', function (done) {
+    request
+      .put('/api/roles/' + roleId)
+      .set('x-access-token', token)
+      .send({
+        role: 'viewer',
+        permissions: 'read'
+      })
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('You are not authorized to execute action');
+        done();
+      });
+  });
+
+  it('asserts that role can be deleted', function (done) {
+    request
+      .delete('/api/roles/' + roleId)
+      .set('x-access-token', token)
+      .end(function (err, res) {
+        expect(res.body.message).to.equal('You are not authorized to execute action');
+        done();
+      });
+  });
+});

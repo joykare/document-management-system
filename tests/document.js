@@ -62,7 +62,7 @@ describe('document test suite', function () {
         .expect(200)
         .expect({message: 'New document created'}, done);
     });
-    
+
     it('asserts that no duplicates are created', function (done) {
       request
         .post('/api/documents')

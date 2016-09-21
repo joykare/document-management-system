@@ -100,7 +100,7 @@ module.exports = {
         if (err){
           res.status(400).send({ message: 'An error occured when finding your document' });
         }
-        if (!document) {
+        if (document.length === 0) {
           res.status(409).send({ message: 'Document not found' });
         } else {
           res.status(200).send(document);
