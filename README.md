@@ -1,6 +1,5 @@
 # Document-Management-System
 
-<<<<<<< HEAD
 [![Coverage Status](https://coveralls.io/repos/github/andela-jwarugu/Document-Management-System/badge.svg?branch=develop)](https://coveralls.io/github/andela-jwarugu/Document-Management-System?branch=develop)
 [![Build Status](https://travis-ci.org/andela-jwarugu/Document-Management-System.svg?branch=develop)](https://travis-ci.org/andela-jwarugu/Document-Management-System)
 
@@ -76,6 +75,3 @@ The system manages documents, users and user roles. Each document defines access
 
       update-one : PUT
       delete-one : DELETE
-=======
-[![Coverage Status](https://coveralls.io/repos/github/andela-jwarugu/Document-Management-System/badge.svg?branch=master)](https://coveralls.io/github/andela-jwarugu/Document-Management-System?branch=master)
->>>>>>> master
