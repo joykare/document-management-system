@@ -28,3 +28,51 @@ The system manages documents, users and user roles. Each document defines access
 * Create a user [POST] `http://localhost:8080/api/users`
 * Login the said user [POST] `http://localhost:8080/api/users/login`
 * Then play around with the availed routes
+
+## Routes
+
+* users:
+
+  1.`http://localhost:8080/api/users/login`
+  
+      login : POST
+  
+  2.`http://localhost:8080/api/users`
+
+      create : POST
+      all : GET
+  
+  3.`http://localhost:8080/api/users/:user_id`
+
+      find-one : GET
+      update-one : PUT
+      delete-one : DELETE
+ 
+  4.`http://localhost:8080/api/users/:user_id`
+
+      find-documents-user : GET
+  
+* documents
+  
+  1.`http://localhost:8080/api/documents`
+
+      create : POST
+      all : GET
+  
+  2.`http://localhost:8080/api/documents/:document_id`
+
+      find-one : GET
+      update-one : PUT
+      delete-one : DELETE
+ 
+* roles
+  
+  1.`http://localhost:8080/api/roles`
+
+      create : POST
+      all : GET
+  
+  2.`http://localhost:8080/api/roles/:role_id`
+
+      update-one : PUT
+      delete-one : DELETE
