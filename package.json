@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jasmine-node tests/server"
+    "pretest": "node seed/dropdb.js && node seed/index.js ",
+    "test": "istanbul cover _mocha tests/ && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,22 @@
   },
   "homepage": "https://github.com/andela-jwarugu/Document-Management-System#readme",
   "dependencies": {
-    "jasmine-node": "^1.14.5",
-    "mongoose": "^4.5.8"
+    "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-generator": "^4.13.4",
+    "mocha": "^3.0.2",
+    "mongoose": "^4.5.8",
+    "mongoose-paginate": "^5.0.0"
+  },
+  "devDependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "coveralls": "^2.11.12",
+    "eslint": "^3.2.2",
+    "istanbul": "^0.4.5",
+    "jsonwebtoken": "^7.1.9",
+    "mocha-lcov-reporter": "^1.2.0",
+    "supertest": "^2.0.0"
   }
 }
