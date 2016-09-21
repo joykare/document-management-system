@@ -101,6 +101,7 @@ describe('document test suite', function () {
             expect(Array.isArray(res.body)).to.equal(true);
             expect(res.body).to.have.length.of.at.most(2);
             expect(res.body[0].title).to.equal('Test Private');
+            expect(res.body[1].createdAt).to.be.below(res.body[0].createdAt);
             done();
           });
     });
@@ -117,6 +118,7 @@ describe('document test suite', function () {
             expect(Array.isArray(res.body)).to.equal(true);
             expect(res.body).to.have.length.of.at.most(2);
             expect(res.body[0].title).to.equal('Test Doc');
+            expect(res.body[1].createdAt).to.be.below(res.body[0].createdAt);
             done();
           });
     });
