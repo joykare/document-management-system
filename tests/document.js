@@ -3,8 +3,8 @@ var request = require('supertest')(app);
 var expect = require('chai').expect;
 var Document = require('../server/models/document');
 
-describe('before login', function(){
-  it('asserts that one cannot access documents before login', function(done){
+describe('before login', function() {
+  it('asserts that one cannot access documents before login', function(done) {
     request
       .get('/api/documents')
       .end(function (err, res){
@@ -14,31 +14,31 @@ describe('before login', function(){
   });
 });
 
-describe('document test suite', function () {
+describe('document test suite', function() {
   var token;
   var documentId;
 
-  before(function (done) {
+  before(function(done) {
     request
       .post('/api/users/login')
       .send({
         email: 'jwarugu@gmail.com',
         password: 'jwarugu'
       })
-      .end(function (err, res) {
+      .end(function(err, res) {
         if (err) { return done(err); }
         token = res.body.token;
         done();
       });
   });
 
-  describe('/documents CRUD operations', function () {
-    it('asserts that a new document has a unique title', function () {
+  describe('/documents CRUD operations', function() {
+    it('asserts that a new document has a unique title', function() {
       var title = Document.schema.paths.title;
       expect(title.options.unique).to.equal(true);
     });
 
-    it('creates a new document', function (done) {
+    it('creates a new document', function(done) {
       request
         .post('/api/documents')
         .set('x-access-token', token)
@@ -46,11 +46,16 @@ describe('document test suite', function () {
           title: 'Test Doc',
           content: 'This should work'
         })
-        .expect(200)
-        .expect({message: 'New document created'}, done);
+        .end(function(err, res) {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.exist;
+          expect(res.body).to.be.an('object');
+          expect(res.body.title).to.equal('Test Doc');
+          done();
+        });
     });
 
-    it('creates a new document with access level defined', function (done) {
+    it('creates a new document with access level defined', function(done) {
       request
         .post('/api/documents')
         .set('x-access-token', token)
@@ -59,11 +64,17 @@ describe('document test suite', function () {
           content: 'yeaay',
           accessLevel: 'private'
         })
-        .expect(200)
-        .expect({message: 'New document created'}, done);
+        .end(function(err, res) {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.exist;
+          expect(res.body).to.be.an('object');
+          expect(res.body.title).to.equal('Test Private');
+          expect(res.body.accessLevel).to.equal('private');
+          done();
+        });
     });
 
-    it('asserts that no duplicates are created', function (done) {
+    it('asserts that no duplicates are created', function(done) {
       request
         .post('/api/documents')
         .set('x-access-token', token)
@@ -71,17 +82,18 @@ describe('document test suite', function () {
           title: 'Test Doc',
           content: 'This should work'
         })
-        .end(function (err, res) {
+        .end(function(err, res) {
+          expect(res.status).to.equal(403);
           expect(res.body.message).to.equal('Duplicate entry');
           done();
         });
     });
 
-    it('gets all documents available', function (done) {
+    it('gets all documents available', function(done) {
       request
         .get('/api/documents')
         .set('x-access-token', token)
-        .end(function (err, res) {
+        .end(function(err, res) {
           expect(res.status).to.equal(200);
           expect(res.body).to.exist;
           expect(Array.isArray(res.body)).to.equal(true);
@@ -90,12 +102,12 @@ describe('document test suite', function () {
         });
     });
 
-    it('gets documents within the limit provided', function (done) {
+    it('gets documents within the limit provided', function(done) {
       request
           .get('/api/documents')
           .set('x-access-token', token)
           .set('limit', 2)
-          .end(function (err, res) {
+          .end(function(err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
@@ -106,13 +118,13 @@ describe('document test suite', function () {
           });
     });
 
-    it('gets documents with an offset and a limit', function (done) {
+    it('gets documents with an offset and a limit', function(done) {
       request
           .get('/api/documents')
           .set('x-access-token', token)
           .set('limit', 2)
           .set('skip', 1)
-          .end(function (err, res) {
+          .end(function(err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
@@ -123,11 +135,11 @@ describe('document test suite', function () {
           });
     });
 
-    it('gets number of documents specified published on a certain date', function (done) {
+    it('gets number of documentspublished on a certain date', function(done) {
       request
           .get('/api/documents?date=2016-09-14')
           .set('x-access-token', token)
-          .end(function (err, res) {
+          .end(function(err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
@@ -136,18 +148,23 @@ describe('document test suite', function () {
           });
     });
 
-    it('returns message if no documents are found', function (done) {
+    it('returns an empty array if no documents are found', function(done) {
       request
           .get('/api/documents?date=2016-09-13')
           .set('x-access-token', token)
-          .expect({message: 'No documents for this date'}, done);
+          .end(function(err, res) {
+            expect(res.status).to.equal(200);
+            expect(Array.isArray(res.body)).to.equal(true);
+            expect(res.body).to.have.length(0);
+            done();
+          })
     });
 
-    it('gets documents published by the same role level(admin)', function (done) {
+    it('gets documents published by the same role(admin)', function(done) {
       request
           .get('/api/documents?role=admin')
           .set('x-access-token', token)
-          .end(function (err, res) {
+          .end(function(err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
@@ -156,11 +173,11 @@ describe('document test suite', function () {
           });
     });
 
-    it('gets documents published by the same role level(user)', function (done) {
+    it('gets documents published by the same role(user)', function(done) {
       request
           .get('/api/documents?role=user')
           .set('x-access-token', token)
-          .end(function (err, res) {
+          .end(function(err, res) {
             expect(res.status).to.equal(200);
             expect(res.body).to.exist;
             expect(Array.isArray(res.body)).to.equal(true);
@@ -170,22 +187,22 @@ describe('document test suite', function () {
     });
   });
 
-  describe('/documents/:id test suite', function () {
-    it('returns specific document', function (done) {
+  describe('/documents/:id test suite', function() {
+    it('returns specific document', function(done) {
       request
         .get('/api/documents/' + documentId)
         .set('x-access-token', token)
-        .end(function (err, res) {
+        .end(function(err, res) {
           expect(res.status).to.equal(200);
           expect(res.body).to.exist;
-          expect(Array.isArray(res.body)).to.equal(true);
-          expect(res.body[0]).to.be.an('object');
-          expect(res.body[0]).to.have.keys('_id', 'title', 'content', 'role', 'modifiedAt', 'ownerId', 'accessLevel', 'createdAt', '__v');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.keys('_id', 'title', 'content', 'role',
+            'modifiedAt', 'ownerId', 'accessLevel', 'createdAt', '__v');
           done();
         });
     });
 
-    it('updates a document', function (done) {
+    it('updates a document', function(done) {
       request
         .put('/api/documents/' + documentId)
         .set('x-access-token', token)
@@ -194,16 +211,25 @@ describe('document test suite', function () {
           content: 'Whatever',
           accessLevel: 'private'
         })
-        .expect(200)
-        .expect({message: 'Document has been updated'}, done);
+        .end(function(err, res) {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.title).to.equal('Updated Doc');
+          expect(res.body.content).to.equal('Whatever');
+          expect(res.body.accessLevel).to.equal('private');
+          done();
+        })
     });
 
-    it('removes a document', function (done) {
+    it('removes a document', function(done) {
       request
         .delete('/api/documents/' + documentId)
         .set('x-access-token', token)
-        .expect(200)
-        .expect({message: 'Your document has been deleted'}, done);
+        .end(function(err, res) {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.be.an('object');
+          done();
+        })
     });
   });
 });

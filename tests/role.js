@@ -2,11 +2,11 @@ var app = require('../index');
 var request = require('supertest')(app);
 var expect = require('chai').expect;
 
-describe('role test suite', function () {
+describe('role test suite', function() {
   var token;
   var roleId;
 
-  before(function (done) {
+  before(function(done) {
     request
       .post('/api/users/login')
       .send({
@@ -20,7 +20,7 @@ describe('role test suite', function () {
       });
   });
 
-  it('creates a role', function (done) {
+  it('creates a role', function(done) {
     request
       .post('/api/roles')
       .set('x-access-token', token)
@@ -29,7 +29,10 @@ describe('role test suite', function () {
         permissions: 'readwrite'
       })
       .end(function (err, res) {
-        expect(res.body.message).to.equal('Role saved');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.exist;
+        expect(res.body).to.be.an('object');
+        expect(res.body.title).to.equal('superadmin');
         done();
       });
   });
@@ -43,6 +46,7 @@ describe('role test suite', function () {
         permissions: 'readwrite'
       })
       .end(function (err, res) {
+        expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('Duplicate entry');
         done();
       });
@@ -70,7 +74,11 @@ describe('role test suite', function () {
         permissions: 'read'
       })
       .end(function (err, res) {
-        expect(res.body.message).to.equal('Role has been updated');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.exist;
+        expect(res.body).to.be.an('object');
+        expect(res.body.title).to.equal('viewer');
+        expect(res.body._id).to.equal(roleId);
         done();
       });
   });
@@ -83,6 +91,7 @@ describe('role test suite', function () {
         permissions: 'write'
       })
       .end(function (err, res) {
+        expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('Not a possible permission');
         done();
       });
@@ -93,7 +102,9 @@ describe('role test suite', function () {
       .delete('/api/roles/' + roleId)
       .set('x-access-token', token)
       .end(function (err, res) {
-        expect(res.body.message).to.equal('Role has been deleted successfully');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.exist;
+        expect(res.body).to.be.an('object');
         done();
       });
   });
@@ -126,6 +137,7 @@ describe('user without readwrite permissions', function () {
         permissions: 'readwrite'
       })
       .end(function (err, res) {
+        expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('You are not authorized to execute action');
         done();
       });
@@ -153,6 +165,7 @@ describe('user without readwrite permissions', function () {
         permissions: 'read'
       })
       .end(function (err, res) {
+        expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('You are not authorized to execute action');
         done();
       });
@@ -163,6 +176,7 @@ describe('user without readwrite permissions', function () {
       .delete('/api/roles/' + roleId)
       .set('x-access-token', token)
       .end(function (err, res) {
+        expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('You are not authorized to execute action');
         done();
       });
