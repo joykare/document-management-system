@@ -80,6 +80,7 @@ module.exports = {
     createdAt: '2016-09-14',
     accessLevel: 'private'
   }, {
+    _id: mongoose.Types.ObjectId('57d22f44b0a303c2286279fd'),
     ownerId: mongoose.Types.ObjectId('57d11f44b0a303c1186279bf'),
     title: 'That',
     content: 'That that that',

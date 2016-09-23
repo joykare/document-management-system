@@ -1,10 +1,10 @@
-var express = require('express'),
-  app = express(),
-  bodyParser = require('body-parser'),
-  mongoose = require('mongoose'),
-  config = require('./config/config'),
-  routes = require('./server/routes'),
-  router = express.Router();
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var config = require('./config/config');
+var routes = require('./server/routes');
+var router = express.Router();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
