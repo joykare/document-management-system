@@ -157,7 +157,7 @@ describe('document test suite', function() {
             expect(Array.isArray(res.body)).to.equal(true);
             expect(res.body).to.have.length(0);
             done();
-          })
+          });
     });
 
     it('gets documents published by the same role(admin)', function(done) {
@@ -218,7 +218,7 @@ describe('document test suite', function() {
           expect(res.body.content).to.equal('Whatever');
           expect(res.body.accessLevel).to.equal('private');
           done();
-        })
+        });
     });
 
     it('removes a document', function(done) {
@@ -229,7 +229,7 @@ describe('document test suite', function() {
           expect(res.status).to.equal(200);
           expect(res.body).to.be.an('object');
           done();
-        })
+        });
     });
   });
 });

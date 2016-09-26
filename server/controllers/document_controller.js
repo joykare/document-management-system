@@ -20,8 +20,8 @@ module.exports = {
           });
         } else {
           res.status(500).send({
-             message: 'Error occured while saving the document'
-           });
+            message: 'Error occured while saving the document'
+          });
         }
       } else {
         res.status(200).send(document);
@@ -64,12 +64,12 @@ module.exports = {
     };
 
     if (date) {
-      var start = date + 'T00:00:00Z';
-      var end = date + 'T23:59:59Z';
+      var start = new Date(date);
+      var end = new Date(start.getTime() + (24 * 60 * 60 * 1000));
       $query.$and.push({
         createdAt: {
           $gte: start,
-          $lte: end}
+          $lt: end}
       });
       findDocument($query);
     } else if (role) {
@@ -126,7 +126,7 @@ module.exports = {
         if (req.body.title) { document.title = req.body.title; }
         if (req.body.content) { document.content = req.body.content; }
         if (req.body.accessLevel) {
-           document.accessLevel = req.body.accessLevel;
+          document.accessLevel = req.body.accessLevel;
         }
 
         document.save(function(err) {
@@ -141,6 +141,7 @@ module.exports = {
       }
     });
   },
+
   remove: function(req, res) {
     Document.findOne({
       $and: [ {ownerId: req.decoded._id}, {_id: req.params.document_id} ]

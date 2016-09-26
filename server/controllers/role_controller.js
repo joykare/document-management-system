@@ -10,6 +10,7 @@ module.exports = {
       });
     }
   },
+
   get: function(req, res) {
     Role.find(function(err, roles) {
       if (err) {
@@ -21,21 +22,19 @@ module.exports = {
       }
     });
   },
+
   create: function(req, res) {
     var possibleActions = Role.schema.path('permissions').enumValues;
-
     var role = new Role();
-
     role.title = req.body.role;
 
     if (possibleActions.indexOf(req.body.permissions) !== -1) {
       role.permissions = req.body.permissions;
-
       role.save(function(err, role) {
         if (err) {
           if (err.code === 11000) {
             res.status(403).send({
-              message: 'Duplicate entry' 
+              message: 'Duplicate entry'
             });
           } else {
             res.status(500).send({
@@ -52,6 +51,7 @@ module.exports = {
       });
     }
   },
+
   update: function(req, res) {
     var possibleActions = Role.schema.path('permissions').enumValues;
 
@@ -79,6 +79,7 @@ module.exports = {
       });
     });
   },
+
   remove: function (req, res) {
     Role.remove({ _id: req.params.role_id}, function(err){
       if (err) {
