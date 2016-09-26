@@ -60,6 +60,7 @@ module.exports = {
         });
       } else if (role) {
         user.role = role._id;
+
         user.save(function(err, user) {
           if (err) {
             if (err.code === 11000) {
@@ -110,7 +111,7 @@ module.exports = {
           res.status(404).send({
             message: 'User not found'
           });
-        } else {
+        } else{
           if (req.body.username) { user.username = req.body.username; }
           if (req.body.first || req.body.last) {
             user.name = {first: req.body.first, last: req.body.last};

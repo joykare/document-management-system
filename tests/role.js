@@ -28,7 +28,7 @@ describe('role test suite', function() {
         role: 'superadmin',
         permissions: 'readwrite'
       })
-      .end(function(err, res) {
+      .end(function (err, res) {
         expect(res.status).to.equal(200);
         expect(res.body).to.exist;
         expect(res.body).to.be.an('object');

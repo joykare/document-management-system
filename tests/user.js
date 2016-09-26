@@ -31,7 +31,7 @@ describe('before login', function() {
         expect(res.body.user).to.be.an('object');
         expect(res.body.user.username).to.equal('user');
         done();
-      })
+      });
   });
 });
 

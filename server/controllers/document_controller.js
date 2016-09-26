@@ -69,7 +69,8 @@ module.exports = {
       $query.$and.push({
         createdAt: {
           $gte: start,
-          $lt: end}
+          $lt: end
+        }
       });
       findDocument($query);
     } else if (role) {

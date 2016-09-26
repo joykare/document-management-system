@@ -30,11 +30,12 @@ module.exports = {
 
     if (possibleActions.indexOf(req.body.permissions) !== -1) {
       role.permissions = req.body.permissions;
+
       role.save(function(err, role) {
         if (err) {
           if (err.code === 11000) {
             res.status(403).send({
-              message: 'Duplicate entry'
+              message: 'Duplicate entry' 
             });
           } else {
             res.status(500).send({
