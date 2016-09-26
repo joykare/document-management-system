@@ -35,7 +35,7 @@ module.exports = {
         if (err) {
           if (err.code === 11000) {
             res.status(403).send({
-              message: 'Duplicate entry' 
+              message: 'Duplicate entry'
             });
           } else {
             res.status(500).send({
@@ -82,15 +82,13 @@ module.exports = {
   },
 
   remove: function (req, res) {
-    Role.remove({ _id: req.params.role_id}, function(err){
+    Role.remove({ _id: req.params.role_id}, function(err, role){
       if (err) {
         res.status(500).send({
           message: 'Error occured while removing the role'
         });
       } else {
-        res.status(200).send({
-          message: 'Role has been deleted successfully'
-        });
+        res.status(200).send(role);
       }
     });
   }
