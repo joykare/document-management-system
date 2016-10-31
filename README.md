@@ -1,7 +1,7 @@
 # Document-Management-System
 
 [![Coverage Status](https://coveralls.io/repos/github/andela-jwarugu/Document-Management-System/badge.svg?branch=develop)](https://coveralls.io/github/andela-jwarugu/Document-Management-System?branch=develop)
-[![Build Status](https://travis-ci.org/andela-jwarugu/Document-Management-System.svg?branch=develop)](https://travis-ci.org/andela-jwarugu/Document-Management-System)
+[![Build Status](https://travis-ci.org/andela-jwarugu/document-management-system.svg?branch=master)](https://travis-ci.org/andela-jwarugu/document-management-system)
 
 ## Description
 
